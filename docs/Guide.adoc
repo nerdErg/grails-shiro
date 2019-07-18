@@ -76,7 +76,7 @@ If you're new to web security a couple of terms you may need to know:
 * *<<Realms, Realm>>*: A Realm is like a bouncer for your app. It determines if someone is allowed in and has the permissions to do
 something. Realms know where the guest list is and can check your credentials against it.
 
-* *Principal*: in most cases as far as we're concerned it's a key to a user. This could be anything, as Simple as a String,
+* *<<Principal>>*: in most cases as far as we're concerned it's a key to a user. This could be anything, as Simple as a String,
 or a user object (not normally the User domain object, because a principal _may not_ be a User).
 
 == Scripts - Quick start

@@ -8,8 +8,8 @@ v1.0, April 2019
 :iconfont-cdn: //cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css
 :stylesdir: resources/style/
 :stylesheet: asciidoctor.css
-:description: New distribution structure documentation
-:keywords: documentation, NSL, APNI, API, APC, tree
+:description: Grails Shiro plugin guide
+:keywords: documentation, Grails, Shiro, 3.3.10, 1.4.1
 :links:
 :numbered:
 :sectlinks:
@@ -28,22 +28,56 @@ Another aim is to make this grails part well tested, so you can trust that it is
 
 == Changes
 
-* Removed Typed Permission object in hasPermissions tag (just pass a Permission object as the permission in place of a string)
-* ShiroAnnotationHandlerService now uses shiros AuthenticatedAnnotationHandler and doesn't redirect to auth/login
-* FilterAccessControlBuilder now gives NPE e.g. `argument 'auth' is class java.lang.String but should be class java.lang.Boolean.`
-inplace of IllegalArgumentException for missing arguments.
-* FilterAccessControlBuilder now gives an IllegalArgumentException if an invalid argument is supplied
+=== From grails-shiro plugin for grails 2.x
+
 * Your realm has the GrailsShiroRealm trait injected
+
 * Your realm must now implement authenticate as `AuthenticationInfo authenticate(AuthenticationToken authenticationToken) throws AuthenticationException`
 previously you could just return a Collection of things or just a thing.
+
 * The default realms implement SimplifiedRealm which is the minimum you need to implement
+
 * Settings - loginUrl, successUrl, unauthorizedUrl... the settings were rather inconsistent so a lot has changed here
 so check the settings section below.
+
 * You don't need to specify annotationdriven any more, they are there by default (Shiro annotations)
+
 * Deprecated grails shiro annotations have been removed. (@RoleRequired, @PermissionRequired)
+
 * The old static accessControl property on the controller has been removed in favour of Annotations and Interceptor.
 (I believe the static accessControl property was broken anyway.) This also remove the confusing differences between the
 different accessControl DSLs
+
+* Removed Typed Permission object in hasPermissions tag (just pass a Permission object as the permission in place of a string)
+
+* FilterAccessControlBuilder now gives NPE e.g. `argument 'auth' is class java.lang.String but should be class java.lang.Boolean.`
+inplace of IllegalArgumentException for missing arguments.
+
+* FilterAccessControlBuilder now gives an IllegalArgumentException if an invalid argument is supplied
+
+* we've removed the ShiroBasicPermission and the 'simple' DbRealm.
+
+== Getting started
+
+If you're implementing your security from scratch, then you can simply install grails-shiro by adding
+`compile "org.grails.plugins:grails-shiro:3.0"` to your build.gradle dependencies and typing
+<<shiro quick start,'grails shiro-quick-start'>>.
+
+This will create a ShiroWildcardDbRealm in your `grails-app/realms` directory and make a ShiroUser and ShiroRole domain
+class. It will also create an AuthController to let you log in. Check out <<Wildcard DB Realm>> for how you might populate
+a couple of users using Boostrap.groovy.
+
+Now to Control access to a Controller add an Interceptor for that controller using
+`<<create shiro controller interceptor, grails create-shiro-controller-interceptor>> MyController` which will add
+<<Permission String conventions, access control by convention>>.
+
+If you're new to web security a couple of terms you may need to know:
+
+* *<<Realms, Realm>>*: A Realm is like a bouncer for your app. It determines if someone is allowed in and has the permissions to do
+something. Realms know where the guest list is and can check your credentials against it.
+
+* *Principal*: in most cases as far as we're concerned it's a key to a user. This could be anything, as Simple as a String,
+or a user object (not normally the User domain object, because a principal _may not_ be a User).
 
 == Scripts - Quick start
 
@@ -568,7 +602,7 @@ e.g. `isPermittedAll(PrincipalCollection principal, String... strings)` so it's 
 You can have as many Realms as you like, preferably not for the same principal store. For example you
 can have a database backed Realm, an LDAP Realm, and a JWT Realm.
 
-=== Widlcard DB Realm
+=== Wildcard DB Realm
 
 We provide a default Wildcard Database Realm that has Users and Roles defined in a database. It creates a User 
 and Role domain class, each has a list of permission strings. The DDL looks something like this:

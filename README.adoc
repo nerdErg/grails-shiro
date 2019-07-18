@@ -44,3 +44,10 @@ To build the plugin yourself and install it from this repo:
 1. clone or fork this repo to your machine
 2. run `gradle install` and that will build, test, install it to your local maven repo (~/.m2)
 3. profit!
+
+== Kudos
+
+* https://github.com/pledbrook/grails-shiro/commits?author=pledbrook[Peter Ledbrook] looking after original grails shiro plugin
+* https://github.com/pledbrook/grails-shiro/commits?author=yellowsnow[yellowsnow]
+* https://github.com/pledbrook/grails-shiro/commits?author=apandichi[apandichi]
+* and https://github.com/pledbrook/grails-shiro/graphs/contributors[others] for work on the previous version of the plugin.

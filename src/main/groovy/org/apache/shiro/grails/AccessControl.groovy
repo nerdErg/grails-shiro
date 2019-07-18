@@ -12,24 +12,19 @@ import grails.artefact.Interceptor
 @TypeChecked
 class AccessControl {
 
-    /** TODO re-write doc
-     * Implementation of the "accessControl()" dynamic method available
-     * to filters. It requires a reference to the interceptor so that it can
-     * access the dynamic properties and methods, such as "request" and
-     * "redirect()".
-     * @param interceptor The interceptor instance that the "accessControl()"
-     * method is called from.
-     * @param authcRequired Specifies whether the default behaviour is
-     * to only allow access if the user is authenticated. If
-     * <code>false</code>, remembered users are also allowed unless this
-     * setting is overridden in the arguments of the method.
-     * @param args An argument map as passed to the "accessControl()"
-     * method. Only the "auth" argument is supported at the moment.
-     * @param closure The closure to execute if the user has not been blocked
-     * by the authentication requirement. The closure should return
-     * <code>true</code> to allow access, or <code>false</code> otherwise.
+    /**
+     * Implementation of the "accessControl()" dynamic method available to Interceptors. It requires a reference to the
+     * interceptor so that it can access the dynamic properties and methods, such as "request" and "redirect()".
+     *
+     * Called from ShiroGrailsPlugin
+     *
+     * @param grailsApplication
+     * @param interceptor
+     * @param authcRequired - boolean if authentication is required by default
+     * @param args
+     * @param closure
+     * @return true/false true if access is granted
      */
-
     static boolean accessControlMethod(GrailsApplication grailsApplication,
                                        Interceptor interceptor,
                                        boolean authcRequired,

@@ -26,12 +26,13 @@ To install add this to your `build.gradle` dependencies:
 
 If you're implementing your security from scratch, then you can simply install grails-shiro by adding
 `compile "org.grails.plugins:grails-shiro:3.0"` to your build.gradle dependencies and typing
-<<shiro quick start,'grails shiro-quick-start'>>.
+shiro quick start, https://github.com/nerdErg/grails-shiro/blob/master/docs/Guide.adoc#shiro-quick-start['grails shiro-quick-start'].
 
 This will create a ShiroWildcardDbRealm in your `grails-app/realms` directory and make a ShiroUser and ShiroRole domain
-class. It will also create an AuthController to let you log in. Check out <<Wildcard DB Realm>> for how you might populate
+class. It will also create an AuthController to let you log in. Check out
+https://github.com/nerdErg/grails-shiro/blob/master/docs/Guide.adoc#wildcard-db-realm[Wildcard DB Realm] for how you might populate
 a couple of users using Boostrap.groovy.
 
 Now to Control access to a Controller add an Interceptor for that controller using
-`<<create shiro controller interceptor, grails create-shiro-controller-interceptor>> MyController` which will add
-<<Permission String conventions, access control by convention>>.
+`https://github.com/nerdErg/grails-shiro/blob/master/docs/Guide.adoc#create-shiro-controller-interceptor[grails create-shiro-controller-interceptor] MyController` which will add
+https://github.com/nerdErg/grails-shiro/blob/master/docs/Guide.adoc#permission-string-conventions[access control by convention].

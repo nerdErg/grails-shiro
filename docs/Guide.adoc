@@ -81,15 +81,15 @@ or a user object (not normally the User domain object, because a principal _may 
 
 == Scripts - Quick start
 
-* <<shiro quick start>>
-* <<create auth controller>>
-* <<create wildcard realm>>
-* <<create ldap realm>>
-* <<create shiro controller interceptor>>
+* grails <<shiro quick start, shiro-quick-start>>
+* grails <<create auth controller, create-auth-controller>>
+* grails <<create wildcard realm, create-wildcard-realm>>
+* grails <<create ldap realm, create-ldap-realm>>
+* grails <<create shiro controller interceptor, create-shiro-controller-interceptor>>
 
 === shiro quick start
 
-`shiro-quick-start` is designed to get you up and running with shiro quickly. It basically runs `create-wildcard-realm` 
+`grails shiro-quick-start` is designed to get you up and running with shiro quickly. It basically runs `create-wildcard-realm`
 and `create-auth-controller` for you. You can control what the realm is called and where it goes like this:
 
 ,====
@@ -103,7 +103,7 @@ command                                                                         
 
 === create auth controller
 
-create-auth-controller creates a base `controllers/../AuthController.groovy` controller and an `controllers/../AuthInterceptor.groovy`
+`grails create-auth-controller` creates a base `controllers/../AuthController.groovy` controller and an `controllers/../AuthInterceptor.groovy`
 Interceptor for logging you in and out. The Interceptor makes sure you can access the AuthController actions.
 
 You can change the package and name of the controller like this:
@@ -119,15 +119,15 @@ command                                         , package          , Controller 
 
 === create wildcard realm
 
-create-wildcard-realm creates a wildcard realm. See <<Create a Wildcard Realm>>.
+`grails create-wildcard-realm` creates a wildcard realm. See <<Create a Wildcard Realm>>.
 
 === create ldap realm
 
-create-ldap-realm creates an LDAP realm. See <<Creating an LDAP realm>>.
+`grails create-ldap-realm` creates an LDAP realm. See <<Creating an LDAP realm>>.
 
 === create shiro controller interceptor
 
-create-shiro-controller-interceptor creates a new `controllers/../[insert controller name here]Interceptor.groovy` with a
+`grails create-shiro-controller-interceptor` creates a new `controllers/../[insert controller name here]Interceptor.groovy` with a
 default accessControl() *for that controller only*. You can of course edit the Interceptor to make it catch more
 controllers if you wish. See <<Interceptor>>.
 
@@ -198,12 +198,15 @@ Is authentication required by default when using Interceptors and the <<Authoriz
 
 ==== session mode
 
-Can only be 'native' which uses the shiro native session manager "with sensible defaults". If not set you get
-the servlet containers (Tomcat) session manager
+'native', default '' (servlet container session).
+
+Session mode can be set to 'native' which uses the shiro native session manager "with sensible defaults".
+
+If not set you get the servlet containers (Tomcat) session manager.
 
 ==== handleExceptions
 
-true/false default true.
+true/false, default true.
 
 If false we don't replace the GrailsExceptionResolver with ShiroGrailsExceptionResolver
 which redirects Unauthenticated and Unauthorized exceptions to 401 and 403 handlers as defined in UrlMappings.
@@ -687,7 +690,7 @@ You can populate your users like this from our tests:
 
 ==== Create a Wildcard Realm
 
-To get started with a wildcard realm type `create-wildcard-realm` from your project directory. This will create a default
+To get started with a wildcard realm type `grails create-wildcard-realm` from your project directory. This will create a default
 `realms/[default.package]/ShiroWildcardDbRealm.groovy` file.
 
 You can change the name and package:
@@ -770,7 +773,7 @@ security:
 
 === JWTRealm
 
-comming soon
+coming soon
 
 == Principal
 
@@ -839,10 +842,6 @@ security:
             controller: auth
             action: unauthorized
 ----
-
-
-
-
 
 == Credential Matcher and Password encrypting
 

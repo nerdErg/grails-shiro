@@ -36,3 +36,11 @@ a couple of users using Boostrap.groovy.
 Now to Control access to a Controller add an Interceptor for that controller using
 `https://github.com/nerdErg/grails-shiro/blob/master/docs/Guide.adoc#create-shiro-controller-interceptor[grails create-shiro-controller-interceptor] MyController` which will add
 https://github.com/nerdErg/grails-shiro/blob/master/docs/Guide.adoc#permission-string-conventions[access control by convention].
+
+== Building from source
+
+To build the plugin yourself and install it from this repo:
+
+1. clone or fork this repo to your machine
+2. run `gradle install` and that will build, test, install it to your local maven repo (~/.m2)
+3. profit!

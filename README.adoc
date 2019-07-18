@@ -13,7 +13,8 @@ This is the Grails Shiro plugin for grails version 3.3.x and Shiro 1.4.1. This w
 (https://github.com/pledbrook/grails-shiro).
 
 We pretty much re-wrote the plugin for Grails 3 and to simplify the use, improve the documentation and make it easier to
-maintain. There are lots of changes please check out the Guide in the docs directory.
+maintain. There are lots of changes please check out the
+https://github.com/nerdErg/grails-shiro/blob/master/docs/Guide.adoc[Guide] in the docs directory.
 
 == Installation
 

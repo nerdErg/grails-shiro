@@ -1,11 +1,10 @@
 = Grails Shiro Plugin
-v1.0, April 2019
-:imagesdir: resources/images/
+v3.0, July 2019
 :toc: left
 :toclevels: 4
 :toc-class: toc2
 :icons: font
-:iconfont-cdn: //cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css
+:imagesdir: resources/images/
 :stylesdir: resources/style/
 :stylesheet: asciidoctor.css
 :description: Grails Shiro plugin guide

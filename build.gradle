@@ -6,11 +6,12 @@ buildscript {
     repositories {
         mavenLocal()
         maven { url "https://repo.grails.org/grails/core" }
-        maven { url  "https://dl.bintray.com/jfrog/jfrog-jars" }
+        maven { url "https://dl.bintray.com/jfrog/jfrog-jars" }
     }
     dependencies {
         classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
         classpath "org.grails:grails-gradle-plugin:$grailsVersion"
+        classpath "org.asciidoctor:asciidoctor-gradle-plugin:1.5.9.2"
     }
 }
 
@@ -22,11 +23,12 @@ apply plugin: "idea"
 apply plugin: "org.grails.grails-plugin"
 apply plugin: "org.grails.grails-plugin-publish"
 apply plugin: "org.grails.grails-gsp"
+apply plugin: 'org.asciidoctor.convert'
 
 repositories {
     mavenLocal()
     maven { url "https://repo.grails.org/grails/core" }
-    maven { url  "https://dl.bintray.com/jfrog/jfrog-jars" }
+    maven { url "https://dl.bintray.com/jfrog/jfrog-jars" }
 }
 
 dependencies {
@@ -254,4 +256,23 @@ tasks.withType(Test) {
         }
         delete "src/test/fixtures/bin/apacheds-2.0.0.AM25"
     }
+}
+
+asciidoctor {
+    sourceDir = file("docs")
+    sources {
+        include "Guide.adoc"
+    }
+
+    resources {
+        from("$sourceDir/resources/images")
+        into './resources/images'
+    }
+    
+    attributes 'source-highlighter': 'coderay',
+            toc                 : '',
+            idprefix            : '',
+            idseparator         : '-'
+
+    outputDir = file("build/docs")
 }

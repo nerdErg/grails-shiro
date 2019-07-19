@@ -55,8 +55,7 @@ class ShiroGrailsPlugin extends Plugin {
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "3.3.0 > *"
     // resources that are excluded from plugin packaging
-    def pluginExcludes = [
-    ]
+    def pluginExcludes = []
 
     def title = "Apache Shiro Integration for Grails"
     def author = "Peter McNeil"

@@ -89,9 +89,6 @@ grailsPublish {
     developers = [pmcneil: "Peter McNeil", pledbrook: "Peter Ledbrook", yellowsnow: "yellowsnow"]
 }
 
-jar {
-}
-
 task shiroTest(type: Test) {
     dependsOn "install"
     //clean up anything left behind
@@ -243,6 +240,7 @@ tasks.withType(Test) {
             workingDir projectDir
             commandLine 'src/test/fixtures/bin/apacheds-2.0.0.AM25/bin/apacheds.sh', 'start'
         }
+        sleep(10000) //wait for the server to start on slower machines
     }
 
     doLast {

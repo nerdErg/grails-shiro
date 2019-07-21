@@ -9,6 +9,9 @@
 :numbered:
 :sectlinks:
 
+
+image:https://travis-ci.org/nerdErg/grails-shiro.svg?branch=master["Build Status", link="https://travis-ci.org/nerdErg/grails-shiro"]
+
 This is the Grails Shiro plugin for grails version 3.3.x and Shiro 1.4.1. This was derived from the Grails 2.x version
 (https://github.com/pledbrook/grails-shiro).
 

@@ -8,6 +8,9 @@ cache:
 language: groovy #
 jdk:
   - openjdk8 #
+before_install:
+  - curl -s "https://get.sdkman.io" | bash
+  - sdk install grails 3.3.10
 script:
   - gradle shiroTest
   - gradle shiroCliTest

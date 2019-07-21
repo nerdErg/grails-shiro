@@ -10,6 +10,9 @@ jdk:
   - openjdk8 #
 before_install:
   - curl -s "https://get.sdkman.io" | bash
+  - source "$HOME/.sdkman/bin/sdkman-init.sh"
+  - echo sdkman_auto_answer=true > ~/.sdkman/etc/config
+  - source "/home/travis/.sdkman/bin/sdkman-init.sh"
   - sdk install grails 3.3.10
 script:
   - gradle shiroTest

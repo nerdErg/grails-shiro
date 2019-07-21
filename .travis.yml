@@ -7,4 +7,7 @@ cache:
     - $HOME/.gradle/wrapper/ #
 language: groovy #
 jdk:
-  - openjdk8 #  
+  - openjdk8 #
+script:
+  - gradle shiroTest
+  - gradle shiroCliTest

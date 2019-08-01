@@ -47,6 +47,8 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.core.Ordered
 
+import java.security.InvalidKeyException
+
 import static javax.servlet.DispatcherType.ERROR
 import static javax.servlet.DispatcherType.REQUEST
 
@@ -133,7 +135,15 @@ Enables Grails applications to take advantage of the Apache Shiro security layer
             }
 
             // Default remember-me manager.
-            shiroRememberMeManager(CookieRememberMeManager)
+            def cipherKeyFromConfig = grailsApplication.config.getProperty('security.shiro.rememberMe.cipherKey')
+            if (cipherKeyFromConfig) {
+                if (!(cipherKeyFromConfig.length() * 8 in [128, 192, 256])) {
+                    throw new InvalidKeyException("Default AES crypt service allows only 128, 196 and 256 bit key.")
+                }
+            }
+            shiroRememberMeManager(CookieRememberMeManager) {
+                if (cipherKeyFromConfig) cipherKey = cipherKeyFromConfig.getBytes("UTF-8")
+            }
 
             def sessionMode = grailsApplication.config.getProperty('security.shiro.session.mode')
             if (sessionMode?.equalsIgnoreCase('native')) {

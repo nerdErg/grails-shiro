@@ -110,8 +110,7 @@ class AccessControl {
     }
 
     private static String getTargetUri(HttpServletRequest request) {
-        println "forwardUri: " + request.forwardURI[request.contextPath.size()..-1] //we only redirect relative to our
-        // application context to prevent login redirect spoofing
+        // we only redirect relative to our application context to prevent login redirect spoofing
         request.forwardURI[request.contextPath.size()..-1] + cleanUpQueryString(request.queryString)
     }
 

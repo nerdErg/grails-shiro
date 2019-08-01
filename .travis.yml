@@ -15,5 +15,5 @@ before_install:
   - source "/home/travis/.sdkman/bin/sdkman-init.sh"
   - sdk install grails 4.0.0
 script:
-  - gradle shiroTest
-  - gradle shiroCliTest
+  - ./gradlew shiroTest
+  - ./gradlew shiroCliTest

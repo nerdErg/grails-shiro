@@ -13,7 +13,7 @@ before_install:
   - source "$HOME/.sdkman/bin/sdkman-init.sh"
   - echo sdkman_auto_answer=true > ~/.sdkman/etc/config
   - source "/home/travis/.sdkman/bin/sdkman-init.sh"
-  - sdk install grails 3.3.10
+  - sdk install grails 4.0.0
 script:
   - gradle shiroTest
   - gradle shiroCliTest

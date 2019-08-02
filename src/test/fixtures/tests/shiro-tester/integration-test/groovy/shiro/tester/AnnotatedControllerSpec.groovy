@@ -57,14 +57,14 @@ class AnnotatedControllerSpec extends GebSpec {
 
         where:
         user      | password   | theUrl             | val
-        'admin'   | 'admin'    | 'annotated/index'  | 'Unauthorized'
-        'admin'   | 'admin'    | 'annotated/list'   | 'Unauthorized'
-        'admin'   | 'admin'    | 'annotated/create' | 'Unauthorized'
-        'admin'   | 'admin'    | 'annotated/save'   | 'Unauthorized'
-        'admin'   | 'admin'    | 'annotated/show'   | 'Unauthorized'
-        'admin'   | 'admin'    | 'annotated/edit'   | 'Unauthorized'
-        'admin'   | 'admin'    | 'annotated/update' | 'Unauthorized'
-        'admin'   | 'admin'    | 'annotated/delete' | 'Unauthorized'
+        'admin'   | 'admin'    | 'annotated/index'  | 'Not Authorized (403)'
+        'admin'   | 'admin'    | 'annotated/list'   | 'Not Authorized (403)'
+        'admin'   | 'admin'    | 'annotated/create' | 'Not Authorized (403)'
+        'admin'   | 'admin'    | 'annotated/save'   | 'Not Authorized (403)'
+        'admin'   | 'admin'    | 'annotated/show'   | 'Not Authorized (403)'
+        'admin'   | 'admin'    | 'annotated/edit'   | 'Not Authorized (403)'
+        'admin'   | 'admin'    | 'annotated/update' | 'Not Authorized (403)'
+        'admin'   | 'admin'    | 'annotated/delete' | 'Not Authorized (403)'
 
         'test1'   | 'test1'    | 'annotated/index'  | 'list'
         'test1'   | 'test1'    | 'annotated/list'   | 'list'
@@ -77,15 +77,15 @@ class AnnotatedControllerSpec extends GebSpec {
 
         'dilbert' | 'password' | 'annotated/index'  | 'list'
         'dilbert' | 'password' | 'annotated/list'   | 'list'
-        'dilbert' | 'password' | 'annotated/create' | 'Unauthorized'
-        'dilbert' | 'password' | 'annotated/save'   | 'Unauthorized'
+        'dilbert' | 'password' | 'annotated/create' | 'Not Authorized (403)'
+        'dilbert' | 'password' | 'annotated/save'   | 'Not Authorized (403)'
         'dilbert' | 'password' | 'annotated/show'   | 'show'
-        'dilbert' | 'password' | 'annotated/edit'   | 'Unauthorized'
-        'dilbert' | 'password' | 'annotated/update' | 'Unauthorized'
-        'dilbert' | 'password' | 'annotated/delete' | 'Unauthorized'
+        'dilbert' | 'password' | 'annotated/edit'   | 'Not Authorized (403)'
+        'dilbert' | 'password' | 'annotated/update' | 'Not Authorized (403)'
+        'dilbert' | 'password' | 'annotated/delete' | 'Not Authorized (403)'
 
         //LDAP users
-        'pmcneil' | 'idunno'   | 'annotated/index'  | 'Unauthorized' //not in group User with capital U
+        'pmcneil' | 'idunno'   | 'annotated/index'  | 'Not Authorized (403)' //not in group User with capital U
         'pmcneil' | 'idunno'   | 'annotated/list'   | 'list'
         'pmcneil' | 'idunno'   | 'annotated/create' | 'create'
         'pmcneil' | 'idunno'   | 'annotated/save'   | 'save'
@@ -94,14 +94,14 @@ class AnnotatedControllerSpec extends GebSpec {
         'pmcneil' | 'idunno'   | 'annotated/update' | 'update'
         'pmcneil' | 'idunno'   | 'annotated/delete' | 'delete'
 
-        'fbloggs' | 'password' | 'annotated/index'  | 'Unauthorized' //not in group User with capital U
+        'fbloggs' | 'password' | 'annotated/index'  | 'Not Authorized (403)' //not in group User with capital U
         'fbloggs' | 'password' | 'annotated/list'   | 'list'
-        'fbloggs' | 'password' | 'annotated/create' | 'Unauthorized'
-        'fbloggs' | 'password' | 'annotated/save'   | 'Unauthorized'
+        'fbloggs' | 'password' | 'annotated/create' | 'Not Authorized (403)'
+        'fbloggs' | 'password' | 'annotated/save'   | 'Not Authorized (403)'
         'fbloggs' | 'password' | 'annotated/show'   | 'show'
-        'fbloggs' | 'password' | 'annotated/edit'   | 'Unauthorized'
-        'fbloggs' | 'password' | 'annotated/update' | 'Unauthorized'
-        'fbloggs' | 'password' | 'annotated/delete' | 'Unauthorized'
+        'fbloggs' | 'password' | 'annotated/edit'   | 'Not Authorized (403)'
+        'fbloggs' | 'password' | 'annotated/update' | 'Not Authorized (403)'
+        'fbloggs' | 'password' | 'annotated/delete' | 'Not Authorized (403)'
 
     }
 }

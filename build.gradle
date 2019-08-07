@@ -144,6 +144,8 @@ task shiroTest(type: Test) {
 ---
 security:
     shiro:
+        rememberMe:
+            cipherKey: 'abcdedfhijklmnopqrstuvwx'
         realm:
             ldap:
                 server:

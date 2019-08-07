@@ -144,6 +144,9 @@ Settings should be in your configuration (`application.yml` or `application.groo
 ----
 security:
     shiro:
+        rememberMe:
+            <<rememberMe cipherKey, cipherKey: 'abcdedfhijklmnopqrstuvwx'>>
+            keySize: 256
         authc:
             <<authc required, required: false>>
         session:
@@ -188,6 +191,23 @@ security:
                 username:
                     attribute: uid
 ----
+
+==== rememberMe cipherKey
+
+16, 24, 32 char string, default is a random 256 bit key generated on each boot
+
+You can set the cipherKey used for encrypting the rememberMe cookie. It needs to be an ASCII string 16,24, or 32 characters
+(bytes) long. It is probably best for security *not* to set this value, but let the system generate a new random key
+each time the application starts.
+
+You may want to set the key though so that users don't have to sign in again when the application restarts, or if you
+have a multi server/load balanced application or docker swarm.
+
+==== rememberMe keySize
+
+124, 192, 256, default 256
+
+This specifies the size of the randomly generated rememberMe key. If you set the cipherKey, this setting is ignored.
 
 ==== authc required
 
@@ -872,6 +892,19 @@ beans = {
 ----
 
 IMPORTANT: HashedCredentialsMatcher doesn't implement PasswordService, so you'd have to use Shiros HashingPasswordService.
+
+== Remember Me
+
+When a user ticks "remember me" when logging in, an encrypted version of the principal is stored in a cookie in the users
+browser. When the user comes back after the session has expired the remember me cookie is used to remember who they are
+but they are not authenticated for this new session yet. You can still get the principal and use that to say things like
+"Welcome back Peter".
+
+You should think about whether you should use remember me at all, and what for. When you set a fixed cipherKey for
+remember me, so a load balanced or swarm app works with "remember me", it gives attackers a chance to access users data if
+they have access to the cookie or their browser.
+
+WARNING: Don't even think of using secured applications without encryption (HTTPS/SSL), you know that, right?
 
 == Reloading Realms
 

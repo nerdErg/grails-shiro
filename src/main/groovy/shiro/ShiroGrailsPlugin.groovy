@@ -32,6 +32,7 @@ import org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy
 import org.apache.shiro.authc.pam.ModularRealmAuthenticator
 import org.apache.shiro.authz.permission.WildcardPermissionResolver
 import org.apache.shiro.cache.ehcache.EhCacheManager
+import org.apache.shiro.crypto.AesCipherService
 import org.apache.shiro.grails.*
 import org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO
 import org.apache.shiro.spring.LifecycleBeanPostProcessor
@@ -132,16 +133,27 @@ Enables Grails applications to take advantage of the Apache Shiro security layer
                 authenticationStrategy = ref("shiroAuthenticationStrategy")
             }
 
-            // Default remember-me manager.
-            String cipherKeyFromConfig = grailsApplication.config.getProperty('security.shiro.rememberMe.cipherKey')
-            if (cipherKeyFromConfig) {
-                if (!(cipherKeyFromConfig.length() * 8 in [128, 192, 256])) {
+            //get optional remember me key
+            byte[] cipherKeyBytes = null
+            String cipherKeyString = grailsApplication.config.getProperty('security.shiro.rememberMe.cipherKey', String, null)
+            Integer cipherKeySize = grailsApplication.config.getProperty('security.shiro.rememberMe.keySize', Integer, 256)
+            if(!cipherKeyString) {
+                AesCipherService aesCipherService = new AesCipherService()
+                cipherKeyBytes = aesCipherService.generateNewKey(cipherKeySize).encoded
+            } else {
+                cipherKeyBytes = cipherKeyString?.getBytes('US-ASCII')
+            }
+
+            if (cipherKeyBytes) {
+                if (!(cipherKeyBytes.size() in [16, 24, 32])) {
                     throw new InvalidKeyException("Default AES crypt service allows only 128, 196 and 256 bit key.")
                 }
             }
+
+            // set up remember-me manager.
             shiroRememberMeManager(CookieRememberMeManager) {
-                if (cipherKeyFromConfig) {
-                    cipherKey = cipherKeyFromConfig.getBytes("UTF-8")
+                if (cipherKeyBytes) {
+                    cipherKey = cipherKeyBytes
                 }
             }
 

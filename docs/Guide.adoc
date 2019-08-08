@@ -1,5 +1,5 @@
 = Grails Shiro Plugin
-v3.0, July 2019
+v3.1, August 2019
 :toc: left
 :toclevels: 4
 :toc-class: toc2
@@ -139,7 +139,7 @@ Settings should be in your configuration (`application.yml` or `application.groo
 
 === security.shiro
 
-[source, yaml, subs="+macros"]
+[subs=+macros, source]
 .example-application.yml
 ----
 security:
@@ -160,14 +160,14 @@ security:
         <<unauthorized redirect, unauthorized>>:
             controller: auth
             action: unauthorized
-        <<_filter, filter>>:
-            <<_basic, basic>>:
+        <<filter, filter>>:
+            <<basic, basic>>:
                 enabled: false
                 appName: Shiro Plugin Test
-            <<_loginurl,loginUrl>>: /login
-            <<_successurl, successUrl>>: /
-            <<_unauthorizedurl, unauthorizedUrl>>: /unauthorized
-            <<_filterchaindefinitions, filterChainDefinitions>>: |
+            <<loginurl,loginUrl>>: /login
+            <<successurl, successUrl>>: /
+            <<unauthorizedurl, unauthorizedUrl>>: /unauthorized
+            <<filterchaindefinitions, filterChainDefinitions>>: |
                                     /basic/** = authcBasic
                                     /form/** = authc
         realm:
@@ -194,6 +194,8 @@ security:
 
 ==== rememberMe cipherKey
 
+since version 3.1
+
 16, 24, 32 char string, default is a random 256 bit key generated on each boot
 
 You can set the cipherKey used for encrypting the rememberMe cookie. It needs to be an ASCII string 16,24, or 32 characters
@@ -204,6 +206,8 @@ You may want to set the key though so that users don't have to sign in again whe
 have a multi server/load balanced application or docker swarm.
 
 ==== rememberMe keySize
+
+since version 3.1
 
 124, 192, 256, default 256
 

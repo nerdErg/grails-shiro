@@ -6,11 +6,15 @@
 :description: Grails shiro plugin
 :keywords: documentation, Grails, Shiro, 3.3.10, 1.4.1
 :links:
-:numbered:
 :sectlinks:
+:toc: left
+:toclevels: 2
+:toc-class: toc2
 
 
 image:https://travis-ci.org/nerdErg/grails-shiro.svg?branch=master["Build Status", link="https://travis-ci.org/nerdErg/grails-shiro"]
+
+Latest Plugin Version 3.1
 
 This is the Grails Shiro plugin for grails version 3.3.x and Shiro 1.4.1. This was derived from the Grails 2.x version
 (https://github.com/pledbrook/grails-shiro).
@@ -21,7 +25,7 @@ https://github.com/nerdErg/grails-shiro/blob/master/docs/Guide.adoc[Guide] in th
 
 == Installation
 
-To install add this to your `build.gradle` dependencies:
+To install, add this to your `build.gradle` dependencies:
 
  compile "org.grails.plugins:grails-shiro:3.0"
 
@@ -39,6 +43,16 @@ a couple of users using Boostrap.groovy.
 Now to Control access to a Controller add an Interceptor for that controller using
 `https://github.com/nerdErg/grails-shiro/blob/master/docs/Guide.adoc#create-shiro-controller-interceptor[grails create-shiro-controller-interceptor] MyController` which will add
 https://github.com/nerdErg/grails-shiro/blob/master/docs/Guide.adoc#permission-string-conventions[access control by convention].
+
+== Version change log
+
+=== version 3.0
+
+* re-write from old Grails 2 plugin see updates in the https://github.com/nerdErg/grails-shiro/blob/master/docs/Guide.adoc[Guide]
+
+=== version 3.1
+
+* Added ability to set the remember me cipherKey or the length of the randomly generated key
 
 == Building from source
 

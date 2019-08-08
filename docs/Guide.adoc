@@ -194,9 +194,9 @@ security:
 
 ==== rememberMe cipherKey
 
-since version 3.1
+NOTE: since version 3.1
 
-16, 24, 32 char string, default is a random 256 bit key generated on each boot
+*Options:* 16, 24 or 32 char string. *Default:* a random 256 bit key generated on each boot
 
 You can set the cipherKey used for encrypting the rememberMe cookie. It needs to be an ASCII string 16,24, or 32 characters
 (bytes) long. It is probably best for security *not* to set this value, but let the system generate a new random key
@@ -207,21 +207,21 @@ have a multi server/load balanced application or docker swarm.
 
 ==== rememberMe keySize
 
-since version 3.1
+NOTE: since version 3.1
 
-124, 192, 256, default 256
+*Options:* 124, 192, 256. *Default:* 256
 
 This specifies the size of the randomly generated rememberMe key. If you set the cipherKey, this setting is ignored.
 
 ==== authc required
 
-true or false, default true.
+*Options:* true or false. *Default:* true.
 
 Is authentication required by default when using Interceptors and the <<Authorization closure, accessControl()>> function.
 
 ==== session mode
 
-'native', default '' (servlet container session).
+*Options:* 'native'. *Default:* '' (servlet container session).
 
 Session mode can be set to 'native' which uses the shiro native session manager "with sensible defaults".
 
@@ -229,7 +229,7 @@ If not set you get the servlet containers (Tomcat) session manager.
 
 ==== handleExceptions
 
-true/false, default true.
+*Options:* true/false. *Default:* true.
 
 If false we don't replace the GrailsExceptionResolver with ShiroGrailsExceptionResolver
 which redirects Unauthenticated and Unauthorized exceptions to 401 and 403 handlers as defined in UrlMappings.
@@ -238,7 +238,8 @@ with your own.
 
 ==== bycrypt rounds
 
-n <= 30, default 10.
+*Options:* n <= 30. *Default:* 10.
+
 Sets the *log* rounds for the default <<Credential Matcher and Password encrypting, BCrypt password encryption>>.
 
 ==== login redirect

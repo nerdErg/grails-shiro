@@ -96,7 +96,7 @@ class AccessControl {
     private static boolean onNotAuthenticated(Subject subject, Interceptor interceptor) {
         Class interceptorClass = interceptor.class
         if (interceptorClass.metaClass.respondsTo(interceptorClass, "onNotAuthenticated")) {
-            return interceptor.metaClass.invokeMethod('onNotAuthenticated',[subject, interceptor])
+            return interceptor.invokeMethod('onNotAuthenticated',[subject, interceptor])
         }
         return true
     }
@@ -104,7 +104,7 @@ class AccessControl {
     private static boolean onUnauthorized(Subject subject, Interceptor interceptor) {
         Class interceptorClass = interceptor.class
         if (interceptorClass.metaClass.respondsTo(interceptorClass, "onUnauthorized")) {
-            return interceptor.metaClass.invokeMethod('onUnauthorized',[subject, interceptor])
+            return interceptor.invokeMethod('onUnauthorized',[subject, interceptor])
         }
         return true
     }

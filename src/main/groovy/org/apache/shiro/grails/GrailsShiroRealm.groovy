@@ -37,7 +37,8 @@ import org.slf4j.LoggerFactory
  *
  * @author Peter McNeil
  */
-@CompileStatic
+//FIXME removed static compilation, not sure why it won't work, needs further look
+//@CompileStatic
 trait GrailsShiroRealm implements Realm, Authorizer, PermissionResolverAware, LogoutAware {
 
     private PermissionResolver permResolver = null

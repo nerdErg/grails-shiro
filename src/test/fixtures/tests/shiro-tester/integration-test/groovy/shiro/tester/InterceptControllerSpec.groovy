@@ -66,13 +66,13 @@ User: pmcneil -> Roles: admin, editor, user, Permissions: book:* user:* book:rea
         user      | password   | theUrl                | val
         'admin'   | 'admin'    | 'intercept/index'     | 'index'
         'admin'   | 'admin'    | 'intercept/list'      | 'list'
-        'admin'   | 'admin'    | 'intercept/show'      | 'Not Authorized (403)' //because there is a @RequiresRoles("test")
+        'admin'   | 'admin'    | 'intercept/show'      | 'Unauthorized' //because there is a @RequiresRoles("test")
         'admin'   | 'admin'    | 'intercept/create'    | 'create'
         'admin'   | 'admin'    | 'intercept/save'      | 'save'
         'admin'   | 'admin'    | 'intercept/edit'      | 'edit'
         'admin'   | 'admin'    | 'intercept/update'    | 'update'
         'admin'   | 'admin'    | 'intercept/delete'    | 'delete'
-        'admin'   | 'admin'    | 'intercept/annotated' | 'Not Authorized (403)' //because there is a @RequiresRoles("test")
+        'admin'   | 'admin'    | 'intercept/annotated' | 'Unauthorized' //because there is a @RequiresRoles("test")
 
         'test1'   | 'test1'    | 'intercept/index'     | 'index'
         'test1'   | 'test1'    | 'intercept/list'      | 'list'
@@ -82,35 +82,35 @@ User: pmcneil -> Roles: admin, editor, user, Permissions: book:* user:* book:rea
         'test1'   | 'test1'    | 'intercept/edit'      | 'edit'
         'test1'   | 'test1'    | 'intercept/update'    | 'update'
         'test1'   | 'test1'    | 'intercept/delete'    | 'delete'
-        'test1'   | 'test1'    | 'intercept/annotated' | 'Not Authorized (403)' //because accessControl says no
+        'test1'   | 'test1'    | 'intercept/annotated' | 'Unauthorized' //because accessControl says no
 
         'dilbert' | 'password' | 'intercept/index'     | 'index'
         'dilbert' | 'password' | 'intercept/list'      | 'list'
-        'dilbert' | 'password' | 'intercept/show'      | 'Not Authorized (403)' //because there is a @RequiresRoles("test")
-        'dilbert' | 'password' | 'intercept/create'    | 'Not Authorized (403)'
-        'dilbert' | 'password' | 'intercept/save'      | 'Not Authorized (403)'
-        'dilbert' | 'password' | 'intercept/edit'      | 'Not Authorized (403)'
-        'dilbert' | 'password' | 'intercept/update'    | 'Not Authorized (403)'
-        'dilbert' | 'password' | 'intercept/delete'    | 'Not Authorized (403)'
+        'dilbert' | 'password' | 'intercept/show'      | 'Unauthorized' //because there is a @RequiresRoles("test")
+        'dilbert' | 'password' | 'intercept/create'    | 'Unauthorized'
+        'dilbert' | 'password' | 'intercept/save'      | 'Unauthorized'
+        'dilbert' | 'password' | 'intercept/edit'      | 'Unauthorized'
+        'dilbert' | 'password' | 'intercept/update'    | 'Unauthorized'
+        'dilbert' | 'password' | 'intercept/delete'    | 'Unauthorized'
         //LDAP users
-        'fbloggs' | 'password' | 'intercept/index'     | 'Not Authorized (403)' // no book:read
-        'fbloggs' | 'password' | 'intercept/list'      | 'Not Authorized (403)' // no book:read
-        'fbloggs' | 'password' | 'intercept/show'      | 'Not Authorized (403)' //because there is a @RequiresRoles("test")
-        'fbloggs' | 'password' | 'intercept/create'    | 'Not Authorized (403)'
-        'fbloggs' | 'password' | 'intercept/save'      | 'Not Authorized (403)'
-        'fbloggs' | 'password' | 'intercept/edit'      | 'Not Authorized (403)'
-        'fbloggs' | 'password' | 'intercept/update'    | 'Not Authorized (403)'
-        'fbloggs' | 'password' | 'intercept/delete'    | 'Not Authorized (403)'
+        'fbloggs' | 'password' | 'intercept/index'     | 'Unauthorized' // no book:read
+        'fbloggs' | 'password' | 'intercept/list'      | 'Unauthorized' // no book:read
+        'fbloggs' | 'password' | 'intercept/show'      | 'Unauthorized' //because there is a @RequiresRoles("test")
+        'fbloggs' | 'password' | 'intercept/create'    | 'Unauthorized'
+        'fbloggs' | 'password' | 'intercept/save'      | 'Unauthorized'
+        'fbloggs' | 'password' | 'intercept/edit'      | 'Unauthorized'
+        'fbloggs' | 'password' | 'intercept/update'    | 'Unauthorized'
+        'fbloggs' | 'password' | 'intercept/delete'    | 'Unauthorized'
 
         'pmcneil' | 'idunno'   | 'intercept/index'     | 'index'
         'pmcneil' | 'idunno'   | 'intercept/list'      | 'list'
-        'pmcneil' | 'idunno'   | 'intercept/show'      | 'Not Authorized (403)' //because there is a @RequiresRoles("test")
+        'pmcneil' | 'idunno'   | 'intercept/show'      | 'Unauthorized' //because there is a @RequiresRoles("test")
         'pmcneil' | 'idunno'   | 'intercept/create'    | 'create'
         'pmcneil' | 'idunno'   | 'intercept/save'      | 'save'
         'pmcneil' | 'idunno'   | 'intercept/edit'      | 'edit'
         'pmcneil' | 'idunno'   | 'intercept/update'    | 'update'
         'pmcneil' | 'idunno'   | 'intercept/delete'    | 'delete'
-        'pmcneil' | 'idunno'   | 'intercept/annotated' | 'Not Authorized (403)' //because there is a @RequiresRoles("test")
+        'pmcneil' | 'idunno'   | 'intercept/annotated' | 'Unauthorized' //because there is a @RequiresRoles("test")
 
     }
 }

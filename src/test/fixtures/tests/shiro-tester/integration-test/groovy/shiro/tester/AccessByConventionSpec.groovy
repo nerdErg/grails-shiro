@@ -64,13 +64,13 @@ User: pmcneil -> Roles: admin, editor, user, Permissions: book:* user:* book:rea
 
         where:
         user      | password   | theUrl        | val
-        'admin'   | 'admin'    | 'book/index'  | 'Not Authorized (403)'
-        'admin'   | 'admin'    | 'book/create' | 'Not Authorized (403)'
-        'admin'   | 'admin'    | 'book/save'   | 'Not Authorized (403)'
-        'admin'   | 'admin'    | 'book/show/1' | 'Not Authorized (403)'
-        'admin'   | 'admin'    | 'book/edit/1' | 'Not Authorized (403)'
-        'admin'   | 'admin'    | 'book/update' | 'Not Authorized (403)'
-        'admin'   | 'admin'    | 'book/delete' | 'Not Authorized (403)'
+        'admin'   | 'admin'    | 'book/index'  | 'Unauthorized'
+        'admin'   | 'admin'    | 'book/create' | 'Unauthorized'
+        'admin'   | 'admin'    | 'book/save'   | 'Unauthorized'
+        'admin'   | 'admin'    | 'book/show/1' | 'Unauthorized'
+        'admin'   | 'admin'    | 'book/edit/1' | 'Unauthorized'
+        'admin'   | 'admin'    | 'book/update' | 'Unauthorized'
+        'admin'   | 'admin'    | 'book/delete' | 'Unauthorized'
 
         'test1'   | 'test1'    | 'book/index'  | 'Book List'
         'test1'   | 'test1'    | 'book/create' | 'Create Book'
@@ -79,12 +79,12 @@ User: pmcneil -> Roles: admin, editor, user, Permissions: book:* user:* book:rea
         // save update and delete need a post - this is enough though
 
         'dilbert' | 'password' | 'book/index'  | 'Book List'
-        'dilbert' | 'password' | 'book/create' | 'Not Authorized (403)'
-        'dilbert' | 'password' | 'book/save'   | 'Not Authorized (403)'
+        'dilbert' | 'password' | 'book/create' | 'Unauthorized'
+        'dilbert' | 'password' | 'book/save'   | 'Unauthorized'
         'dilbert' | 'password' | 'book/show/1' | 'Show Book'
-        'dilbert' | 'password' | 'book/edit'   | 'Not Authorized (403)'
-        'dilbert' | 'password' | 'book/update' | 'Not Authorized (403)'
-        'dilbert' | 'password' | 'book/delete' | 'Not Authorized (403)'
+        'dilbert' | 'password' | 'book/edit'   | 'Unauthorized'
+        'dilbert' | 'password' | 'book/update' | 'Unauthorized'
+        'dilbert' | 'password' | 'book/delete' | 'Unauthorized'
 
         //LDAP users
         'pmcneil' | 'idunno'   | 'book/index'  | 'Book List'
@@ -93,12 +93,12 @@ User: pmcneil -> Roles: admin, editor, user, Permissions: book:* user:* book:rea
         'pmcneil' | 'idunno'   | 'book/edit/1' | 'Edit Book'
 
         'fbloggs' | 'password' | 'book/index'  | 'Book List'
-        'fbloggs' | 'password' | 'book/create' | 'Not Authorized (403)'
-        'fbloggs' | 'password' | 'book/save'   | 'Not Authorized (403)'
+        'fbloggs' | 'password' | 'book/create' | 'Unauthorized'
+        'fbloggs' | 'password' | 'book/save'   | 'Unauthorized'
         'fbloggs' | 'password' | 'book/show/1' | 'Show Book'
-        'fbloggs' | 'password' | 'book/edit'   | 'Not Authorized (403)'
-        'fbloggs' | 'password' | 'book/update' | 'Not Authorized (403)'
-        'fbloggs' | 'password' | 'book/delete' | 'Not Authorized (403)'
+        'fbloggs' | 'password' | 'book/edit'   | 'Unauthorized'
+        'fbloggs' | 'password' | 'book/update' | 'Unauthorized'
+        'fbloggs' | 'password' | 'book/delete' | 'Unauthorized'
 
     }
 }

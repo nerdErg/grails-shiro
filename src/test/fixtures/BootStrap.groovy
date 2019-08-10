@@ -10,6 +10,13 @@ class BootStrap {
     PasswordService credentialMatcher
 
     def init = { servletContext ->
+
+        /*
+        Set up users and roles
+        User: admin -> Roles: Administrator, Permissions: none
+        User: dilbert -> Roles: user, Permissions: book:show,index,read
+        User: test1 -> Roles: user, test, Permissions: book:*, custom:read,write
+         */
         def adminRole = ShiroRole.findByName("Administrator")
         if (!adminRole) {
             adminRole = new ShiroRole(name: "Administrator")
@@ -18,7 +25,7 @@ class BootStrap {
             adminUser.save()
             assert credentialMatcher.passwordsMatch('admin', adminUser.passwordHash)
 
-            def userRole = new ShiroRole(name: "User")
+            def userRole = new ShiroRole(name: "user")
             def normalUser = new ShiroUser(username: "dilbert", passwordHash: credentialMatcher.encryptPassword("password"))
             normalUser.addToRoles(userRole)
             normalUser.addToPermissions("book:show,index,read")

@@ -11,12 +11,22 @@ import grails.testing.mixin.integration.Integration
 @Integration(applicationClass = Application)
 class AnnotatedServiceSpec extends GebSpec {
 
+/*
+Users and roles
+User: admin -> Roles: Administrator, Permissions: none
+User: dilbert -> Roles: user, Permissions: book:show,index,read
+User: test1 -> Roles: user, test, Permissions: book:*, custom:read,write
+User: fbloggs -> Roles: user, Permissions: book:index,list book:show:* cart:*
+User: pmcneil -> Roles: admin, editor, user, Permissions: book:* user:* book:read,write book:index,list book:show:* book:write
+ */
+
     @Unroll
     def "When not logged in service method annotations return [#value] for #theUrl @#select"() {
         when:
         go theUrl
 
         then:
+        println "\n----Test anonymous gets $value trying $theUrl"
         if (select) {
             $(select).text().contains(value)
         } else {
@@ -52,29 +62,27 @@ class AnnotatedServiceSpec extends GebSpec {
         go theUrl
 
         then:
-        if (select) {
-            $(select).text().contains(value)
-        } else {
-            $().text().contains(value)
-        }
+        println "\n----Test $user gets $value trying $theUrl"
+        println $().text()
+        $().text().contains(value)
 
         where:
-        user      | password   | theUrl                        | select | value
-        'admin'   | 'admin'    | 'annotatedService/unsecured'  | ''     | 'Unsecured: one'
-        'admin'   | 'admin'    | 'annotatedService/guest'      | ''     | 'Guest: two'
-        'admin'   | 'admin'    | 'annotatedService/user'       | ''     | 'User: three'
-        'admin'   | 'admin'    | 'annotatedService/role'       | ''     | 'Not Authorized (403)'
-        'admin'   | 'admin'    | 'annotatedService/permission' | ''     | 'Not Authorized (403)'
-        'dilbert' | 'password' | 'annotatedService/role'       | ''     | 'Role: five'
-        'dilbert' | 'password' | 'annotatedService/permission' | ''     | 'Permission: six'
+        user      | password   | theUrl                        | value
+        'admin'   | 'admin'    | 'annotatedService/unsecured'  | 'Unsecured: one'
+        'admin'   | 'admin'    | 'annotatedService/guest'      | 'Attempting to perform a guest-only operation.' //not a guest, authenticated
+        'admin'   | 'admin'    | 'annotatedService/user'       | 'User: three'
+        'admin'   | 'admin'    | 'annotatedService/role'       | 'Not Authorized (403)'
+        'admin'   | 'admin'    | 'annotatedService/permission' | 'Not Authorized (403)'
+        'dilbert' | 'password' | 'annotatedService/role'       | 'Role: five'
+        'dilbert' | 'password' | 'annotatedService/permission' | 'Not Authorized (403)'
         //LDAP users
-        'fbloggs' | 'password' | 'annotatedService/unsecured'  | ''     | 'Unsecured: one'
-        'fbloggs' | 'password' | 'annotatedService/guest'      | ''     | 'Guest: two'
-        'fbloggs' | 'password' | 'annotatedService/user'       | ''     | 'User: three'
-        'fbloggs' | 'password' | 'annotatedService/role'       | ''     | 'Not Authorized (403)' //not User but user
-        'fbloggs' | 'password' | 'annotatedService/permission' | ''     | 'Permission: six'
-        'pmcneil' | 'idunno'   | 'annotatedService/role'       | ''     | 'Not Authorized (403)' //not User but user
-        'pmcneil' | 'idunno'   | 'annotatedService/permission' | ''     | 'Permission: six'
+        'fbloggs' | 'password' | 'annotatedService/unsecured'  | 'Unsecured: one'
+        'fbloggs' | 'password' | 'annotatedService/guest'      | 'Attempting to perform a guest-only operation.' //not a guest, authenticated
+        'fbloggs' | 'password' | 'annotatedService/user'       | 'User: three'
+        'fbloggs' | 'password' | 'annotatedService/role'       | 'Role: five'
+        'fbloggs' | 'password' | 'annotatedService/permission' | 'Not Authorized (403)'
+        'pmcneil' | 'idunno'   | 'annotatedService/role'       | 'Role: five'
+        'pmcneil' | 'idunno'   | 'annotatedService/permission' | 'Permission: six'
     }
 
     def "When rememberMe is used and not authenticated in this session"() {

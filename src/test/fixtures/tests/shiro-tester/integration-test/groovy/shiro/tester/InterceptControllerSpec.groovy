@@ -9,6 +9,15 @@ import spock.lang.Unroll
 @Integration(applicationClass = Application)
 class InterceptControllerSpec extends GebSpec {
 
+/*
+Users and roles
+User: admin -> Roles: Administrator, Permissions: none
+User: dilbert -> Roles: user, Permissions: book:show,index,read
+User: test1 -> Roles: user, test, Permissions: book:*, custom:read,write
+User: fbloggs -> Roles: user, Permissions: book:index,list book:show:* cart:*
+User: pmcneil -> Roles: admin, editor, user, Permissions: book:* user:* book:read,write book:index,list book:show:* book:write
+ */
+
     @Unroll
     def "Authentication required for action #theUrl"() {
         given:

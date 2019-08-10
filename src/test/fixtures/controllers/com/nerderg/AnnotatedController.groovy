@@ -6,7 +6,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions
 import org.apache.shiro.authz.annotation.RequiresRoles
 
 @RequiresAuthentication
-@RequiresRoles(value=["User", "test"], logical=Logical.OR)
+@RequiresRoles(value=["user", "test"], logical=Logical.OR)
 class AnnotatedController {
 
     def index() {

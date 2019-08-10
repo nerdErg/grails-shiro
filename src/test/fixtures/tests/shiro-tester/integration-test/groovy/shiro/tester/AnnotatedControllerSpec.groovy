@@ -11,6 +11,15 @@ import grails.testing.mixin.integration.Integration
 @Integration(applicationClass = Application)
 class AnnotatedControllerSpec extends GebSpec {
 
+/*
+Users and roles
+User: admin -> Roles: Administrator, Permissions: none
+User: dilbert -> Roles: user, Permissions: book:show,index,read
+User: test1 -> Roles: user, test, Permissions: book:*, custom:read,write
+User: fbloggs -> Roles: user, Permissions: book:index,list book:show:* cart:*
+User: pmcneil -> Roles: admin, editor, user, Permissions: book:* user:* book:read,write book:index,list book:show:* book:write
+ */
+
     @Unroll
     def "RequiresAuthentication on controller class works on every action #theUrl"() {
         given:
@@ -52,8 +61,9 @@ class AnnotatedControllerSpec extends GebSpec {
         signIn.click()
 
         then:
+        println "\n----Test $user gets $val trying $theUrl"
         println $().text() //.contains(val)
-        $().text().contains(val)
+        $().text().startsWith(val)
 
         where:
         user      | password   | theUrl             | val
@@ -75,17 +85,17 @@ class AnnotatedControllerSpec extends GebSpec {
         'test1'   | 'test1'    | 'annotated/update' | 'update'
         'test1'   | 'test1'    | 'annotated/delete' | 'delete'
 
-        'dilbert' | 'password' | 'annotated/index'  | 'list'
-        'dilbert' | 'password' | 'annotated/list'   | 'list'
+        'dilbert' | 'password' | 'annotated/index'  | 'Not Authorized (403)'
+        'dilbert' | 'password' | 'annotated/list'   | 'Not Authorized (403)'
         'dilbert' | 'password' | 'annotated/create' | 'Not Authorized (403)'
         'dilbert' | 'password' | 'annotated/save'   | 'Not Authorized (403)'
-        'dilbert' | 'password' | 'annotated/show'   | 'show'
+        'dilbert' | 'password' | 'annotated/show'   | 'Not Authorized (403)'
         'dilbert' | 'password' | 'annotated/edit'   | 'Not Authorized (403)'
         'dilbert' | 'password' | 'annotated/update' | 'Not Authorized (403)'
         'dilbert' | 'password' | 'annotated/delete' | 'Not Authorized (403)'
 
         //LDAP users
-        'pmcneil' | 'idunno'   | 'annotated/index'  | 'Not Authorized (403)' //not in group User with capital U
+        'pmcneil' | 'idunno'   | 'annotated/index'  | 'list'
         'pmcneil' | 'idunno'   | 'annotated/list'   | 'list'
         'pmcneil' | 'idunno'   | 'annotated/create' | 'create'
         'pmcneil' | 'idunno'   | 'annotated/save'   | 'save'
@@ -94,11 +104,11 @@ class AnnotatedControllerSpec extends GebSpec {
         'pmcneil' | 'idunno'   | 'annotated/update' | 'update'
         'pmcneil' | 'idunno'   | 'annotated/delete' | 'delete'
 
-        'fbloggs' | 'password' | 'annotated/index'  | 'Not Authorized (403)' //not in group User with capital U
+        'fbloggs' | 'password' | 'annotated/index'  | 'list'
         'fbloggs' | 'password' | 'annotated/list'   | 'list'
         'fbloggs' | 'password' | 'annotated/create' | 'Not Authorized (403)'
         'fbloggs' | 'password' | 'annotated/save'   | 'Not Authorized (403)'
-        'fbloggs' | 'password' | 'annotated/show'   | 'show'
+        'fbloggs' | 'password' | 'annotated/show'   | 'Not Authorized (403)'
         'fbloggs' | 'password' | 'annotated/edit'   | 'Not Authorized (403)'
         'fbloggs' | 'password' | 'annotated/update' | 'Not Authorized (403)'
         'fbloggs' | 'password' | 'annotated/delete' | 'Not Authorized (403)'

@@ -37,7 +37,9 @@ import org.slf4j.LoggerFactory
  *
  * @author Peter McNeil
  */
-//FIXME removed static compilation, not sure why it won't work, needs further look
+//TODO removed static compilation from class and placed on methods because of groovy compiler error.
+//"Couldn't find trait helper classes on compile classpath!" see Traits.java line 159
+//This doesn't happen if you remove the implements clause from the trait. Needs further investigation.
 //@CompileStatic
 trait GrailsShiroRealm implements Realm, Authorizer, PermissionResolverAware, LogoutAware {
 
@@ -46,6 +48,7 @@ trait GrailsShiroRealm implements Realm, Authorizer, PermissionResolverAware, Lo
     Class tokenClass
 
     @SuppressWarnings("unused")
+    @CompileStatic
     void setTokenClass(Class clazz) {
         this.tokenClass = clazz
     }
@@ -57,6 +60,7 @@ trait GrailsShiroRealm implements Realm, Authorizer, PermissionResolverAware, Lo
      * @param authenticationToken AuthenticationToken to authenticate
      * @return AuthenticationInfo* @throws AuthenticationException if not authenticated.
      */
+    @CompileStatic
     AuthenticationInfo authenticate(AuthenticationToken authenticationToken) throws AuthenticationException {
         throw new NotImplementedException("authenticate has not been implemented in the realm")
     }
@@ -68,6 +72,7 @@ trait GrailsShiroRealm implements Realm, Authorizer, PermissionResolverAware, Lo
      * @return SimpleAuthenticationInfo without any credentials
      */
     @SuppressWarnings("unused")
+    @CompileStatic
     SimpleAuthenticationInfo makeSimpleAuthInfoSansCredentials(Collection principals) {
         return new SimpleAuthenticationInfo(new SimplePrincipalCollection(principals, getName()), null)
     }
@@ -79,6 +84,7 @@ trait GrailsShiroRealm implements Realm, Authorizer, PermissionResolverAware, Lo
      * @return SimpleAuthenticationInfo without any credentials
      */
     @SuppressWarnings("unused")
+    @CompileStatic
     SimpleAuthenticationInfo makeSimpleAuthInfoSansCredentials(Object principal) {
         return new SimpleAuthenticationInfo(new SimplePrincipalCollection([principal], getName()), null)
     }
@@ -87,10 +93,12 @@ trait GrailsShiroRealm implements Realm, Authorizer, PermissionResolverAware, Lo
      * Set the permission resolver. This is initially set to WildcardPermissionResolver unless replaced via spring
      * @param pr
      */
+    @CompileStatic
     void setPermissionResolver(PermissionResolver pr) {
         this.permResolver = pr
     }
 
+    @CompileStatic
     PermissionResolver getPermissionResolver() {
         permResolver
     }
@@ -101,6 +109,7 @@ trait GrailsShiroRealm implements Realm, Authorizer, PermissionResolverAware, Lo
      * @return
      * @throws AuthenticationException
      */
+    @CompileStatic
     AuthenticationInfo getAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         // If the target realm has an 'authenticate' method, we use that.
         try {
@@ -116,6 +125,7 @@ trait GrailsShiroRealm implements Realm, Authorizer, PermissionResolverAware, Lo
      * @see org.apache.shiro.realm.Realm#getName()
      */
 
+    @CompileStatic
     String getName() {
         return this.class.name
     }
@@ -125,6 +135,7 @@ trait GrailsShiroRealm implements Realm, Authorizer, PermissionResolverAware, Lo
      *
      * @see org.apache.shiro.realm.Realm#supports(org.apache.shiro.authc.AuthenticationToken)
      */
+    @CompileStatic
     boolean supports(AuthenticationToken authenticationToken) {
         if (this.tokenClass) {
             return this.tokenClass.isAssignableFrom(authenticationToken.getClass())
@@ -138,6 +149,7 @@ trait GrailsShiroRealm implements Realm, Authorizer, PermissionResolverAware, Lo
      *
      * @see org.apache.shiro.authc.LogoutAware#onLogout(PrincipalCollection)
      */
+    @CompileStatic
     void onLogout(PrincipalCollection principal) {
     }
 
@@ -148,6 +160,7 @@ trait GrailsShiroRealm implements Realm, Authorizer, PermissionResolverAware, Lo
      * @param permission
      * @throws AuthorizationException
      */
+    @CompileStatic
     void checkPermission(PrincipalCollection principal, Permission permission) throws AuthorizationException {
         if (!isPermitted(principal, permission)) {
             throw new UnauthorizedException("User '${principal.getPrimaryPrincipal()}' does not have permission '${permission}'")
@@ -161,6 +174,7 @@ trait GrailsShiroRealm implements Realm, Authorizer, PermissionResolverAware, Lo
      * @param permissions
      * @throws AuthorizationException
      */
+    @CompileStatic
     void checkPermissions(PrincipalCollection principal, Collection<Permission> permissions) throws AuthorizationException {
         if (!isPermittedAll(principal, permissions)) {
             throw new UnauthorizedException("User '${principal.getPrimaryPrincipal()}' does not have the required permissions.")
@@ -174,6 +188,7 @@ trait GrailsShiroRealm implements Realm, Authorizer, PermissionResolverAware, Lo
      * @param role
      * @throws AuthorizationException
      */
+    @CompileStatic
     void checkRole(PrincipalCollection principal, String role) throws AuthorizationException {
         if (!hasRole(principal, role)) {
             throw new UnauthorizedException("User '${principal.getPrimaryPrincipal()}' does not have role '${role}'")
@@ -187,6 +202,7 @@ trait GrailsShiroRealm implements Realm, Authorizer, PermissionResolverAware, Lo
      * @param roles
      * @throws AuthorizationException
      */
+    @CompileStatic
     void checkRoles(PrincipalCollection principal, Collection<String> roles) throws AuthorizationException {
         if (!hasAllRoles(principal, roles)) {
             throw new UnauthorizedException("User '${principal.getPrimaryPrincipal()}' does not have all these roles: ${roles}")
@@ -202,10 +218,12 @@ trait GrailsShiroRealm implements Realm, Authorizer, PermissionResolverAware, Lo
      * @param roles
      * @return true if they have all the roles
      */
+    @CompileStatic
     boolean hasAllRoles(PrincipalCollection principalCollection, Collection<String> roles) {
         hasAllRoles(principalCollection.primaryPrincipal, roles)
     }
 
+    @CompileStatic
     boolean hasAllRoles(Object principal, Collection<String> roles) {
         LOG.error("hasAllRoles has not been implemented in the Realm ${getName()}")
         return false
@@ -220,10 +238,12 @@ trait GrailsShiroRealm implements Realm, Authorizer, PermissionResolverAware, Lo
      * @param role
      * @return true if they have this role
      */
+    @CompileStatic
     boolean hasRole(PrincipalCollection principalCollection, String role) {
         return hasRole(principalCollection.primaryPrincipal, role)
     }
 
+    @CompileStatic
     boolean hasRole(Object principal, String roleName) {
         LOG.error("hasRole has not been implemented in the Realm ${getName()}")
         return false
@@ -237,6 +257,7 @@ trait GrailsShiroRealm implements Realm, Authorizer, PermissionResolverAware, Lo
      * @param roles
      * @return array of boolean mapped to roles in list
      */
+    @CompileStatic
     boolean[] hasRoles(PrincipalCollection principalCollection, List<String> roles) {
 
         boolean[] retval = new boolean[roles.size()]
@@ -256,10 +277,12 @@ trait GrailsShiroRealm implements Realm, Authorizer, PermissionResolverAware, Lo
      * @param permission
      * @return true if the principal has this permission
      */
+    @CompileStatic
     boolean isPermitted(PrincipalCollection principalCollection, Permission permission) {
         return isPermitted((Object) principalCollection.primaryPrincipal, permission)
     }
 
+    @CompileStatic
     boolean isPermitted(Object principal, Permission requiredPermission) {
         LOG.error("isPermitted has not been implemented in the Realm ${getName()}")
         return false
@@ -273,6 +296,7 @@ trait GrailsShiroRealm implements Realm, Authorizer, PermissionResolverAware, Lo
      * @param permissions
      * @return Array of booleans indicating the permissions the user has.
      */
+    @CompileStatic
     boolean[] isPermitted(PrincipalCollection principalCollection, List<Permission> permissions) {
         boolean[] retval = new boolean[permissions.size()]
 
@@ -290,6 +314,7 @@ trait GrailsShiroRealm implements Realm, Authorizer, PermissionResolverAware, Lo
      * @param permissions
      * @return true if all user has all permissions
      */
+    @CompileStatic
     boolean isPermittedAll(PrincipalCollection principalCollection, Collection<Permission> permissions) {
         permissions.each { permission ->
             if (!isPermitted(principalCollection, permission)) return false
@@ -305,6 +330,7 @@ trait GrailsShiroRealm implements Realm, Authorizer, PermissionResolverAware, Lo
      * @throws AuthorizationException if the user does not have the permission, or the permission string
      *                                is Invalid
      */
+    @CompileStatic
     void checkPermission(PrincipalCollection principal, String s) throws AuthorizationException {
         checkPermission(principal, toPermission(s))
     }
@@ -319,6 +345,7 @@ trait GrailsShiroRealm implements Realm, Authorizer, PermissionResolverAware, Lo
      * @throws AuthorizationException if the user does not have the permission, or the permission string
      *                                is Invalid
      */
+    @CompileStatic
     void checkPermissions(PrincipalCollection principal, String... strings) throws AuthorizationException {
         checkPermissions(principal, toPermissionList(strings))
     }
@@ -334,6 +361,7 @@ trait GrailsShiroRealm implements Realm, Authorizer, PermissionResolverAware, Lo
      * @return true if permitted
      * @see #isPermitted(PrincipalCollection principals, String permission)
      */
+    @CompileStatic
     boolean isPermitted(PrincipalCollection principal, String s) {
         try {
             return isPermitted(principal, toPermission(s))
@@ -356,6 +384,7 @@ trait GrailsShiroRealm implements Realm, Authorizer, PermissionResolverAware, Lo
      * @param strings the permission Strings to use
      * @return boolean array true if permitted
      */
+    @CompileStatic
     boolean[] isPermitted(PrincipalCollection principal, String... strings) {
         try {
             return isPermitted(principal, toPermissionList(strings))
@@ -378,6 +407,7 @@ trait GrailsShiroRealm implements Realm, Authorizer, PermissionResolverAware, Lo
      * @param strings the permission Strings to use
      * @return boolean true if permitted
      */
+    @CompileStatic
     boolean isPermittedAll(PrincipalCollection principal, String... strings) {
         try {
             return isPermittedAll(principal, toPermissionList(strings))
@@ -397,6 +427,7 @@ trait GrailsShiroRealm implements Realm, Authorizer, PermissionResolverAware, Lo
      * @param roles role name strings
      * @throws AuthorizationException if the user does not have all of the specified roles.
      */
+    @CompileStatic
     void checkRoles(PrincipalCollection principal, String... roles) throws AuthorizationException {
         checkRoles(principal, Arrays.asList(roles))
     }
@@ -404,6 +435,7 @@ trait GrailsShiroRealm implements Realm, Authorizer, PermissionResolverAware, Lo
     /**
      * Converts a single permission string into a Permission instances.
      */
+    @CompileStatic
     private Permission toPermission(String s) throws AuthorizationException {
         if (permissionResolver == null) return null
         try {
@@ -419,6 +451,7 @@ trait GrailsShiroRealm implements Realm, Authorizer, PermissionResolverAware, Lo
      * Converts an array of string permissions into a list of
      * {@link org.apache.shiro.authz.permission.WildcardPermission} instances.
      */
+    @CompileStatic
     private List<Permission> toPermissionList(String[] strings) throws AuthorizationException {
         List<Permission> permissions = new ArrayList<>(strings.length)
         for (String string : strings) {

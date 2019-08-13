@@ -76,6 +76,7 @@ https://github.com/nerdErg/grails-shiro/blob/master/docs/Guide.adoc#permission-s
 === version 3.1
 
 * Added ability to set the remember me cipherKey or the length of the randomly generated key
+* Fix for onNotAuthenticated and onUnauthorized not working correctly (https://github.com/nerdErg/grails-shiro/pull/6[Can't be invoked on metaclass])
 
 === version 3.0
 

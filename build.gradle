@@ -137,6 +137,8 @@ task shiroTest(type: Test) {
         File build = new File("$projectDir/src/test/app/shiro-tester/build.gradle")
         String content = build.text.replaceFirst('\ndependencies \\{', """dependencies {
     compile "org.grails.plugins:grails-shiro:3.1" """)
+        content = content.replaceAll(/repositories \{/, '''repositories {
+mavenLocal()''')
         build.write(content)
         //add LDAP config
 
@@ -222,6 +224,8 @@ task shiroCliTest(type: Test) {
         File build = new File("$projectDir/src/test/app/cli-tester/build.gradle")
         String content = build.text.replaceFirst('\ndependencies \\{', """dependencies {
     compile "org.grails.plugins:grails-shiro:3.1" """)
+        content = content.replaceAll(/repositories \{/, '''repositories {
+mavenLocal()''')
         build.write(content)
 
         exec {

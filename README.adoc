@@ -68,4 +68,5 @@ To build the plugin yourself and install it from this repo:
 * https://github.com/pledbrook/grails-shiro/commits?author=pledbrook[Peter Ledbrook] looking after original grails shiro plugin
 * https://github.com/pledbrook/grails-shiro/commits?author=yellowsnow[yellowsnow]
 * https://github.com/pledbrook/grails-shiro/commits?author=apandichi[apandichi]
+* https://github.com/animator013[animator013 - Peter Legen]
 * and https://github.com/pledbrook/grails-shiro/graphs/contributors[others] for work on the previous version of the plugin.

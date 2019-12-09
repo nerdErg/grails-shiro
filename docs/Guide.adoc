@@ -1,5 +1,5 @@
 = Grails Shiro Plugin
-v3.1, August 2019
+v4.1, August 2019
 :toc: left
 :toclevels: 4
 :toc-class: toc2
@@ -13,7 +13,7 @@ v3.1, August 2019
 :numbered:
 :sectlinks:
 
-Documentation for the Grails 3 shiro plugin, Shiro 1.4.1
+Documentation for the Grails 3 & 4 shiro plugin, Shiro 1.4.2
 
 == Concept and Aim
 

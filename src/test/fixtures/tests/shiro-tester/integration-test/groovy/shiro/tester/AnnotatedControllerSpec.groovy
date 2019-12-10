@@ -67,14 +67,14 @@ User: pmcneil -> Roles: admin, editor, user, Permissions: book:* user:* book:rea
 
         where:
         user      | password   | theUrl             | val
-        'admin'   | 'admin'    | 'annotated/index'  | 'Unauthorized'
-        'admin'   | 'admin'    | 'annotated/list'   | 'Unauthorized'
-        'admin'   | 'admin'    | 'annotated/create' | 'Unauthorized'
-        'admin'   | 'admin'    | 'annotated/save'   | 'Unauthorized'
-        'admin'   | 'admin'    | 'annotated/show'   | 'Unauthorized'
-        'admin'   | 'admin'    | 'annotated/edit'   | 'Unauthorized'
-        'admin'   | 'admin'    | 'annotated/update' | 'Unauthorized'
-        'admin'   | 'admin'    | 'annotated/delete' | 'Unauthorized'
+        'admin'   | 'admin'    | 'annotated/index'  | 'Not Authorized'
+        'admin'   | 'admin'    | 'annotated/list'   | 'Not Authorized'
+        'admin'   | 'admin'    | 'annotated/create' | 'Not Authorized'
+        'admin'   | 'admin'    | 'annotated/save'   | 'Not Authorized'
+        'admin'   | 'admin'    | 'annotated/show'   | 'Not Authorized'
+        'admin'   | 'admin'    | 'annotated/edit'   | 'Not Authorized'
+        'admin'   | 'admin'    | 'annotated/update' | 'Not Authorized'
+        'admin'   | 'admin'    | 'annotated/delete' | 'Not Authorized'
 
         'test1'   | 'test1'    | 'annotated/index'  | 'list'
         'test1'   | 'test1'    | 'annotated/list'   | 'list'
@@ -85,14 +85,14 @@ User: pmcneil -> Roles: admin, editor, user, Permissions: book:* user:* book:rea
         'test1'   | 'test1'    | 'annotated/update' | 'update'
         'test1'   | 'test1'    | 'annotated/delete' | 'delete'
 
-        'dilbert' | 'password' | 'annotated/index'  | 'Unauthorized'
-        'dilbert' | 'password' | 'annotated/list'   | 'Unauthorized'
-        'dilbert' | 'password' | 'annotated/create' | 'Unauthorized'
-        'dilbert' | 'password' | 'annotated/save'   | 'Unauthorized'
-        'dilbert' | 'password' | 'annotated/show'   | 'Unauthorized'
-        'dilbert' | 'password' | 'annotated/edit'   | 'Unauthorized'
-        'dilbert' | 'password' | 'annotated/update' | 'Unauthorized'
-        'dilbert' | 'password' | 'annotated/delete' | 'Unauthorized'
+        'dilbert' | 'password' | 'annotated/index'  | 'Not Authorized'
+        'dilbert' | 'password' | 'annotated/list'   | 'Not Authorized'
+        'dilbert' | 'password' | 'annotated/create' | 'Not Authorized'
+        'dilbert' | 'password' | 'annotated/save'   | 'Not Authorized'
+        'dilbert' | 'password' | 'annotated/show'   | 'Not Authorized'
+        'dilbert' | 'password' | 'annotated/edit'   | 'Not Authorized'
+        'dilbert' | 'password' | 'annotated/update' | 'Not Authorized'
+        'dilbert' | 'password' | 'annotated/delete' | 'Not Authorized'
 
         //LDAP users
         'pmcneil' | 'idunno'   | 'annotated/index'  | 'list'
@@ -106,12 +106,12 @@ User: pmcneil -> Roles: admin, editor, user, Permissions: book:* user:* book:rea
 
         'fbloggs' | 'password' | 'annotated/index'  | 'list'
         'fbloggs' | 'password' | 'annotated/list'   | 'list'
-        'fbloggs' | 'password' | 'annotated/create' | 'Unauthorized'
-        'fbloggs' | 'password' | 'annotated/save'   | 'Unauthorized'
-        'fbloggs' | 'password' | 'annotated/show'   | 'Unauthorized'
-        'fbloggs' | 'password' | 'annotated/edit'   | 'Unauthorized'
-        'fbloggs' | 'password' | 'annotated/update' | 'Unauthorized'
-        'fbloggs' | 'password' | 'annotated/delete' | 'Unauthorized'
+        'fbloggs' | 'password' | 'annotated/create' | 'Not Authorized'
+        'fbloggs' | 'password' | 'annotated/save'   | 'Not Authorized'
+        'fbloggs' | 'password' | 'annotated/show'   | 'Not Authorized'
+        'fbloggs' | 'password' | 'annotated/edit'   | 'Not Authorized'
+        'fbloggs' | 'password' | 'annotated/update' | 'Not Authorized'
+        'fbloggs' | 'password' | 'annotated/delete' | 'Not Authorized'
 
     }
 }

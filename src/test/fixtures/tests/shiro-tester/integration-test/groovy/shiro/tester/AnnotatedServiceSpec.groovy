@@ -64,23 +64,23 @@ User: pmcneil -> Roles: admin, editor, user, Permissions: book:* user:* book:rea
         then:
         println "\n----Test $user gets $value trying $theUrl"
         println $().text()
-        $().text().startsWith(value)
+        $().text().contains(value)
 
         where:
         user      | password   | theUrl                        | value
         'admin'   | 'admin'    | 'annotatedService/unsecured'  | 'Unsecured: one'
-        'admin'   | 'admin'    | 'annotatedService/guest'      | 'Login' //not a guest, authenticated
+        'admin'   | 'admin'    | 'annotatedService/guest'      | 'The current Subject is not a guest' //not a guest, authenticated
         'admin'   | 'admin'    | 'annotatedService/user'       | 'User: three'
-        'admin'   | 'admin'    | 'annotatedService/role'       | 'Unauthorized'
-        'admin'   | 'admin'    | 'annotatedService/permission' | 'Unauthorized'
+        'admin'   | 'admin'    | 'annotatedService/role'       | 'Not Authorized'
+        'admin'   | 'admin'    | 'annotatedService/permission' | 'Not Authorized'
         'dilbert' | 'password' | 'annotatedService/role'       | 'Role: five'
-        'dilbert' | 'password' | 'annotatedService/permission' | 'Unauthorized'
+        'dilbert' | 'password' | 'annotatedService/permission' | 'Not Authorized'
         //LDAP users
         'fbloggs' | 'password' | 'annotatedService/unsecured'  | 'Unsecured: one'
-        'fbloggs' | 'password' | 'annotatedService/guest'      | 'Login' //not a guest, authenticated
+        'fbloggs' | 'password' | 'annotatedService/guest'      | 'The current Subject is not a guest' //not a guest, authenticated
         'fbloggs' | 'password' | 'annotatedService/user'       | 'User: three'
         'fbloggs' | 'password' | 'annotatedService/role'       | 'Role: five'
-        'fbloggs' | 'password' | 'annotatedService/permission' | 'Unauthorized'
+        'fbloggs' | 'password' | 'annotatedService/permission' | 'Not Authorized'
         'pmcneil' | 'idunno'   | 'annotatedService/role'       | 'Role: five'
         'pmcneil' | 'idunno'   | 'annotatedService/permission' | 'Permission: six'
     }
@@ -170,7 +170,7 @@ User: pmcneil -> Roles: admin, editor, user, Permissions: book:* user:* book:rea
         go 'annotatedService/administrator'
 
         then:
-        $().text().contains('Unauthorized')
+        $().text().contains('Not Authorized')
 
     }
 
@@ -190,7 +190,7 @@ User: pmcneil -> Roles: admin, editor, user, Permissions: book:* user:* book:rea
         signIn.click()
 
         then:
-        $().text().contains('Unauthorized')
+        $().text().contains('Not Authorized')
     }
 
 }

@@ -138,8 +138,7 @@ task shiroTest(type: Test) {
         //add the plugin
         File build = new File("$projectDir/src/test/app/shiro-tester/build.gradle")
         String content = build.text.replaceFirst('\ndependencies \\{', """dependencies {
-    compile "org.grails.plugins:grails-shiro:4.2"
-    testRuntime "org.seleniumhq.selenium:htmlunit-driver:2.32.1" """)
+    compile "org.grails.plugins:grails-shiro:4.2" """)
         content = content.replaceAll(/repositories \{/, '''repositories {
 mavenLocal()''')
         build.write(content)

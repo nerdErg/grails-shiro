@@ -63,7 +63,7 @@ User: pmcneil -> Roles: admin, editor, user, Permissions: book:* user:* book:rea
         then:
         println "\n----Test $user gets $val trying $theUrl"
         println $().text() //.contains(val)
-        $().text().startsWith(val)
+        $().text().contains(val)
 
         where:
         user      | password   | theUrl             | val

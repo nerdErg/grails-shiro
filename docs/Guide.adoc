@@ -151,7 +151,7 @@ security:
             <<authc required, required: false>>
         session:
             <<session mode, mode: native>>
-            <<handleExceptions, handleExceptions: true>>
+        <<handleExceptions, handleExceptions: true>>
         bycrypt:
             <<bycrypt rounds, rounds: 10>>
         <<login redirect, login>>:
@@ -248,7 +248,7 @@ used by the default `accessControl()` Method and realms to redirect users to a l
 
 * controller - default 'auth'
 * action - default 'login'
-* url - default /auth/login (trumps controller/action)
+* uri - default /auth/login (trumps controller/action)
 
 ==== unauthorized redirect
 
@@ -256,7 +256,7 @@ used by the default `accessControl()` Method and realms to redirect users to say
 
 * controller - default 'auth'
 * action - default 'unauthorized'
-* url - default /auth/unauthorized (trumps controller/action)
+* uri - default /auth/unauthorized (trumps controller/action)
 
 ==== filter
 

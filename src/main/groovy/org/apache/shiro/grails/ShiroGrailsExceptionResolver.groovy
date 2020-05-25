@@ -1,25 +1,27 @@
 package org.apache.shiro.grails
 
-import grails.web.mapping.UrlMappingInfo
-import grails.web.mapping.UrlMappingsHolder
+import grails.artefact.controller.support.ResponseRedirector
+import grails.core.GrailsApplication
+import grails.core.support.GrailsApplicationAware
 import org.apache.shiro.authz.AuthorizationException
 import org.apache.shiro.authz.UnauthenticatedException
-import org.grails.core.exceptions.GrailsRuntimeException
-import org.grails.web.errors.GrailsExceptionResolver
-import org.grails.web.mapping.DefaultUrlMappingInfo
-import org.grails.web.mapping.UrlMappingUtils
+import org.codehaus.groovy.runtime.InvokerInvocationException
+import org.grails.exceptions.ExceptionUtils
+import org.grails.web.servlet.mvc.exceptions.GrailsMVCException
 import org.springframework.web.servlet.ModelAndView
+import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import java.lang.reflect.InvocationTargetException
-
 /**
  * User: pmcneil
  * Date: 5/07/19
  *
  */
-class ShiroGrailsExceptionResolver extends GrailsExceptionResolver {
+class ShiroGrailsExceptionResolver  extends SimpleMappingExceptionResolver implements GrailsApplicationAware, ResponseRedirector {
+
+    protected GrailsApplication grailsApplication
 
     @Override
     ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response,
@@ -27,14 +29,18 @@ class ShiroGrailsExceptionResolver extends GrailsExceptionResolver {
 
         Exception authEx = findAuthException(ex)
         if (authEx) {
-            UrlMappingsHolder urlMappings = lookupUrlMappings()
-            return resolveViewOrRedirect(authEx, urlMappings, request, response)
-        } else {
-            return super.resolveException(request, response, handler, ex)
+            if(authEx instanceof UnauthenticatedException) {
+                loginRedirect(grailsApplication, request)
+            }
+            if(authEx instanceof AuthorizationException) {
+                unauthorizedRedirect(grailsApplication, request)
+            }
+            return new ModelAndView()
         }
+        return null
     }
 
-    protected Exception findAuthException(Exception ex) {
+    private static Exception findAuthException(Exception ex) {
         Throwable e = findWrappedException(ex)
         if(e instanceof UnauthenticatedException || e instanceof AuthorizationException) {
             return e
@@ -51,58 +57,61 @@ class ShiroGrailsExceptionResolver extends GrailsExceptionResolver {
         return null
     }
 
-
-    protected UrlMappingInfo matchAuthStatusCode(Exception ex, UrlMappingsHolder urlMappings) {
-        int statusCode = (ex instanceof UnauthenticatedException) ? HttpServletResponse.SC_UNAUTHORIZED : HttpServletResponse.SC_FORBIDDEN
-
-        UrlMappingInfo info = urlMappings.matchStatusCode(statusCode, ex)
-        if (info == null) {
-            info = urlMappings.matchStatusCode(statusCode,
-                    getRootCause(ex))
+    private static Exception findWrappedException(Exception e) {
+        if ((e instanceof InvokerInvocationException)||(e instanceof GrailsMVCException)) {
+            Throwable t = getRootCause(e)
+            if (t instanceof Exception) {
+                e = (Exception) t
+            }
         }
-        if (info == null) {
-            info = urlMappings.matchStatusCode(statusCode)
-        }
-        return info
+        return e
     }
 
-    protected ModelAndView resolveViewOrRedirect(Exception ex, UrlMappingsHolder urlMappings, HttpServletRequest request,
-                                                 HttpServletResponse response) {
+    private static Throwable getRootCause(Throwable ex) {
+        return ExceptionUtils.getRootCause(ex)
+    }
 
-        UrlMappingInfo info = matchAuthStatusCode(ex, urlMappings)
+    private static void loginRedirect(GrailsApplication grailsApplication, HttpServletRequest request) {
 
-        if (info != null) {
-            Map params = extractRequestParamsWithUrlMappingHolder(urlMappings, request)
-            if (params != null && !params.isEmpty()) {
-                Map infoParams = info.getParameters()
-                if (infoParams != null) {
-                    params.putAll(info.getParameters())
-                }
-                info = new DefaultUrlMappingInfo(info, params, grailsApplication)
-            }
-        }
+        String targetUri = getTargetUri(request)
+        String redirectUri = grailsApplication.config.getProperty('security.shiro.login.uri')
 
-        try {
-            if (info != null && info.getViewName() != null) {
-                resolveView(request, info, new ModelAndView())
-            } else if (info != null && info.getControllerName() != null) {
-                String uri = determineUri(request)
-                if (!response.isCommitted()) {
-
-                    request.session["Authmsg"] = ex.message.startsWith('This subject is anonymous -') ? 'You need to log in to do this.' : ex.message
-                    String forwardUrl = UrlMappingUtils.buildDispatchUrlForMapping(info)
-                    response.sendRedirect(forwardUrl + "?targetUri=$uri")
-
-                    // return an empty ModelAndView since the error handler has been processed
-                    return new ModelAndView()
-                }
-            }
-            return mv
-        }
-        catch (Exception e) {
-            LOG.error("Unable to render errors view: " + e.getMessage(), e)
-            throw new GrailsRuntimeException(e)
+        if (redirectUri) {
+            redirectUri(uri: redirectUri)
+        } else {
+            redirectUri(
+                    controller: (grailsApplication.config.getProperty('security.shiro.login.controller') ?: "auth"),
+                    action: (grailsApplication.config.getProperty('security.shiro.login.action') ?: "login"),
+                    params: [targetUri: targetUri.toString()]
+            )
         }
     }
 
+    static void unauthorizedRedirect(GrailsApplication grailsApplication, HttpServletRequest request) {
+        String targetUri = getTargetUri(request)
+        String redirectUri = grailsApplication.config.getProperty('security.shiro.unauthorized.uri')
+        if (redirectUri) {
+            redirectUri(uri: redirectUri)
+        } else {
+            redirectUri(
+                    controller: (grailsApplication.config.getProperty('security.shiro.unauthorized.controller') ?: "auth"),
+                    action: (grailsApplication.config.getProperty('security.shiro.unauthorized.action') ?: "unauthorized"),
+                    params: [targetUri: targetUri.toString()]
+            )
+        }
+    }
+
+    private static String getTargetUri(HttpServletRequest request) {
+        // we only redirect relative to our application context to prevent login redirect spoofing
+        request.forwardURI[request.contextPath.size()..-1] + cleanUpQueryString(request.queryString)
+    }
+
+    private static String cleanUpQueryString(String query) {
+        query ? '?' + query.replaceFirst(/^\?/, '') : ''
+    }
+
+    @Override
+    void setGrailsApplication(GrailsApplication grailsApplication) {
+        this.grailsApplication = grailsApplication
+    }
 }

@@ -2,16 +2,13 @@ package org.apache.shiro.grails
 
 import grails.core.GrailsApplication
 import grails.core.support.GrailsApplicationAware
-import grails.web.api.WebAttributes
 import grails.web.mapping.LinkGenerator
 import grails.web.mapping.ResponseRedirector
 import grails.web.mapping.mvc.RedirectEventListener
 import org.apache.shiro.authz.AuthorizationException
 import org.apache.shiro.authz.UnauthenticatedException
-import org.codehaus.groovy.runtime.InvokerInvocationException
-import org.grails.exceptions.ExceptionUtils
-import org.grails.web.servlet.mvc.exceptions.GrailsMVCException
-import org.grails.web.util.GrailsApplicationAttributes
+import org.codehaus.groovy.runtime.ScriptBytecodeAdapter
+import org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.servlet.ModelAndView
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver
@@ -19,7 +16,6 @@ import org.springframework.web.servlet.support.RequestDataValueProcessor
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import java.lang.reflect.InvocationTargetException
 
 /**
  * User: pmcneil
@@ -60,6 +56,7 @@ class ShiroGrailsExceptionResolver extends SimpleMappingExceptionResolver implem
                                   Object handler, Exception ex) {
         Exception authEx = findAuthException(ex)
         if (authEx) {
+            setAuthmsg(authEx, request)
             if (authEx instanceof UnauthenticatedException) {
                 loginRedirect(request, response)
                 return new ModelAndView()
@@ -72,35 +69,28 @@ class ShiroGrailsExceptionResolver extends SimpleMappingExceptionResolver implem
         return null
     }
 
-    private static Exception findAuthException(Exception ex) {
-        Throwable e = findWrappedException(ex)
-        if (e instanceof UnauthenticatedException || e instanceof AuthorizationException) {
+    private static void setAuthmsg(Exception ex, HttpServletRequest request) {
+        request.session["Authmsg"] = ex.message.startsWith('This subject is anonymous -') ? 'You need to log in to do this.' : ex.message
+
+    }
+
+    private static Exception findAuthException(Exception e) {
+        if (e instanceof AuthorizationException) {
             return e
         }
-        if (e instanceof InvocationTargetException) {
-            if (e.targetException instanceof UnauthenticatedException) {
-                return (Exception) e.targetException
+        //Note order is important Unauthenticated comes before Authorization
+        Throwable parentThrowable = e
+        while (DefaultTypeTransformation.booleanUnbox(parentThrowable.getCause()) && ScriptBytecodeAdapter.compareNotEqual(parentThrowable, parentThrowable.getCause())) {
+            Throwable childThrowable = parentThrowable.getCause()
+            if (childThrowable instanceof UnauthenticatedException) {
+                return (Exception) childThrowable
             }
-            e = getRootCause(e)
-            if (e instanceof AuthorizationException) {
-                return (Exception) e
+            if (childThrowable instanceof AuthorizationException) {
+                return (Exception) childThrowable
             }
-        }
-        return null
-    }
-
-    private static Exception findWrappedException(Exception e) {
-        if ((e instanceof InvocationTargetException || e instanceof InvokerInvocationException) || (e instanceof GrailsMVCException)) {
-            Throwable t = getRootCause(e)
-            if (t instanceof Exception) {
-                e = (Exception) t
-            }
+            parentThrowable = childThrowable
         }
         return e
-    }
-
-    private static Throwable getRootCause(Throwable ex) {
-        return ExceptionUtils.getRootCause(ex)
     }
 
     private void loginRedirect(HttpServletRequest request, HttpServletResponse response) {

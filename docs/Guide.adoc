@@ -13,7 +13,7 @@ v4.1, August 2019
 :numbered:
 :sectlinks:
 
-Documentation for the Grails 3 & 4 shiro plugin, Shiro 1.4.2
+Documentation for the Grails 3 & 4 shiro plugin, Shiro 1.5.3
 
 == Concept and Aim
 
@@ -26,6 +26,20 @@ what is happening under the hood.
 Another aim is to make this grails part well tested, so you can trust that it is doing what we say it is doing.
 
 == Changes
+
+=== Plugin v4.3 Shiro 1.5.3
+
+* Fixed Unauthorized redirect missing context path - https://github.com/nerdErg/grails-shiro/issues/16
+* Upgrade to shiro 1.5.3
+
+==== Breaking change
+With the fix for the Unauthorized redirect issue we took the opportunity to replace the mechanism that uses the URL
+mapping to determine where to redirect AuthorizationException and UnauthenticatedException. Now we use the same settings
+<<login redirect, login>> and <<unauthorized redirect, unauthorized>> as used for
+<<Interceptor.accessControl() - Method in Interceptor, accesscontrol()>>.
+
+This does mean if you had a different setting for Annotation controlled access to Interceptor controlled access that
+this will break.
 
 === From grails-shiro plugin for grails 2.x
 
@@ -304,7 +318,7 @@ The Grails Shiro plugin supports the https://shiro.apache.org/static/1.4.1/apido
 
 Annotations can be on a class or method. Annotations on methods take precedence.
 
-Annotations will throw an Unauthenticated or Unauthorized Exception which should be caught by the `ShiroGrailsExceptionResolver`
+Annotations will throw an UnauthenticatedException or AuthorizationException which should be caught by the `ShiroGrailsExceptionResolver`
 and redirected. See <<Redirecting Unauthenticated and Unauthorized>>.
 
 [source, groovy]
@@ -832,26 +846,8 @@ which checks the principal is a ShiroWildcardDbPrincipalHolder, otherwise return
 
 == Redirecting Unauthenticated and Unauthorized
 
-Somewhat confusingly there are two different redirect mechanisms and two places to configure them....
-Annotations throw an exception which is caught via the shiroGrailsExceptionResolver, which looks for a mapping in URLMapping.groovy
-for 401 and 403. The shiro plugin provides the following mapping:
-
-[source, groovy]
-.ShiroUrlMapping.groovy
-----
-class ShiroUrlMappings {
-
-    static mappings = {
-        "401"(controller: "auth", action: "login")
-        "403"(controller: "auth", action: "unauthorized")
-    }
-}
-----
-
-You can replace those mappings as you please. Note the plugin will *redirect* to those mappings, not forward.
-
-The accessControl() method in the Interceptor redirects to `auth/login` or `auth/unauthorized` directly (no exception is
-thrown) and currently doesn't use the mappings. It uses the config options `security.shiro.login...` and
+The <<Interceptor.accessControl() - Method in Interceptor, accesscontrol()>> method and <<Annotations>> in the Interceptor redirect to `auth/login` or `auth/unauthorized` directly
+and currently doesn't use the mappings. It uses the config options `security.shiro.login...` and
 `security.shiro.unauthorized...` e.g.
 
 [source, yaml]
@@ -866,6 +862,11 @@ security:
             controller: auth
             action: unauthorized
 ----
+
+No exceptions are thrown with accessControl(). Annotations do throw exceptions which are caught via the
+`SiroGrailsExceptionResolver` and redirected to the above settings.
+
+NOTE: This has changed since v4.2 of the plugin, which used URL mappings for 403/401 return codes for Annotations only.
 
 == Credential Matcher and Password encrypting
 

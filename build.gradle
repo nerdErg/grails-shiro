@@ -144,6 +144,10 @@ mavenLocal()''')
 
         new File("$grailsApp/conf/application.yml").append('''
 ---
+server:
+    servlet:
+        context-path: /rainbow
+---
 security:
     shiro:
         rememberMe:

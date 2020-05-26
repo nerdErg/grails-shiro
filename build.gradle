@@ -1,7 +1,7 @@
 buildscript {
     ext {
         grailsVersion = project.grailsVersion
-        shiroVersion = "1.4.2"
+        shiroVersion = "1.5.3"
     }
     repositories {
         mavenLocal()
@@ -195,6 +195,11 @@ security:
             commandLine './gradlew', 'integrationTest'
         }
 
+        copy {
+            from file("$projectDir/src/test/app/shiro-tester/build/reports/tests")
+            into file("$projectDir/build/reports/tests/integrationtests")
+        }
+
         delete "$projectDir/src/test/app"
     }
 }
@@ -231,6 +236,11 @@ mavenLocal()''')
         exec {
             workingDir "$projectDir/src/test/app/cli-tester"
             commandLine './gradlew', 'test'
+        }
+
+        copy {
+            from file("$projectDir/src/test/app/cli-tester/build/reports/tests")
+            into file("$projectDir/build/reports/tests/clitests")
         }
 
         delete "$projectDir/src/test/app"
@@ -274,11 +284,11 @@ asciidoctor {
         from("$sourceDir/resources/images")
         into './resources/images'
     }
-    
+
     attributes 'source-highlighter': 'coderay',
-            toc                 : '',
-            idprefix            : '',
-            idseparator         : '-'
+            toc: '',
+            idprefix: '',
+            idseparator: '-'
 
     outputDir = file("build/docs")
 }

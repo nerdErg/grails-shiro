@@ -57,18 +57,16 @@ class ShiroGrailsExceptionResolver  extends SimpleMappingExceptionResolver imple
     @Override
     ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response,
                                   Object handler, Exception ex) {
-        if(request.getAttribute(GrailsApplicationAttributes.REDIRECT_ISSUED)){
-            println("************ Already redirected!")
-        }
         Exception authEx = findAuthException(ex)
         if (authEx) {
             if(authEx instanceof UnauthenticatedException) {
                 loginRedirect(request, response)
+                return new ModelAndView()
             }
             if(authEx instanceof AuthorizationException) {
                 unauthorizedRedirect(request, response)
+                return new ModelAndView()
             }
-            return new ModelAndView()
         }
         return null
     }

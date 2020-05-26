@@ -20,19 +20,20 @@ import org.springframework.web.servlet.support.RequestDataValueProcessor
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import java.lang.reflect.InvocationTargetException
+
 /**
  * User: pmcneil
  * Date: 5/07/19
  *
  */
-class ShiroGrailsExceptionResolver  extends SimpleMappingExceptionResolver implements GrailsApplicationAware {
+class ShiroGrailsExceptionResolver extends SimpleMappingExceptionResolver implements GrailsApplicationAware {
 
     protected GrailsApplication grailsApplication
     private LinkGenerator linkGenerator
     private RequestDataValueProcessor requestDataValueProcessor
     private Collection<RedirectEventListener> redirectListeners
 
-    @Autowired(required=false)
+    @Autowired(required = false)
     void setRedirectListeners(Collection<RedirectEventListener> redirectListeners) {
         this.redirectListeners = redirectListeners
     }
@@ -48,7 +49,7 @@ class ShiroGrailsExceptionResolver  extends SimpleMappingExceptionResolver imple
     }
 
     LinkGenerator getGrailsLinkGenerator() {
-        if(this.linkGenerator == null) {
+        if (this.linkGenerator == null) {
             this.linkGenerator = webRequest.getApplicationContext().getBean(LinkGenerator)
         }
         return this.linkGenerator
@@ -59,11 +60,11 @@ class ShiroGrailsExceptionResolver  extends SimpleMappingExceptionResolver imple
                                   Object handler, Exception ex) {
         Exception authEx = findAuthException(ex)
         if (authEx) {
-            if(authEx instanceof UnauthenticatedException) {
+            if (authEx instanceof UnauthenticatedException) {
                 loginRedirect(request, response)
                 return new ModelAndView()
             }
-            if(authEx instanceof AuthorizationException) {
+            if (authEx instanceof AuthorizationException) {
                 unauthorizedRedirect(request, response)
                 return new ModelAndView()
             }
@@ -73,15 +74,15 @@ class ShiroGrailsExceptionResolver  extends SimpleMappingExceptionResolver imple
 
     private static Exception findAuthException(Exception ex) {
         Throwable e = findWrappedException(ex)
-        if(e instanceof UnauthenticatedException || e instanceof AuthorizationException) {
+        if (e instanceof UnauthenticatedException || e instanceof AuthorizationException) {
             return e
         }
-        if(e instanceof InvocationTargetException) {
-            if(e.targetException instanceof UnauthenticatedException) {
+        if (e instanceof InvocationTargetException) {
+            if (e.targetException instanceof UnauthenticatedException) {
                 return (Exception) e.targetException
             }
             e = getRootCause(e)
-            if(e instanceof AuthorizationException) {
+            if (e instanceof AuthorizationException) {
                 return (Exception) e
             }
         }
@@ -89,7 +90,7 @@ class ShiroGrailsExceptionResolver  extends SimpleMappingExceptionResolver imple
     }
 
     private static Exception findWrappedException(Exception e) {
-        if ((e instanceof InvokerInvocationException)||(e instanceof GrailsMVCException)) {
+        if ((e instanceof InvocationTargetException || e instanceof InvokerInvocationException) || (e instanceof GrailsMVCException)) {
             Throwable t = getRootCause(e)
             if (t instanceof Exception) {
                 e = (Exception) t
@@ -108,12 +109,12 @@ class ShiroGrailsExceptionResolver  extends SimpleMappingExceptionResolver imple
         String redirectUri = grailsApplication.config.getProperty('security.shiro.login.uri')
 
         if (redirectUri) {
-            redirect([uri: redirectUri],request, response)
+            redirect([uri: redirectUri], request, response)
         } else {
             redirect(
                     [controller: (grailsApplication.config.getProperty('security.shiro.login.controller') ?: "auth"),
-                    action: (grailsApplication.config.getProperty('security.shiro.login.action') ?: "login"),
-                    params: [targetUri: targetUri?.toString()]],request, response
+                     action    : (grailsApplication.config.getProperty('security.shiro.login.action') ?: "login"),
+                     params    : [targetUri: targetUri?.toString()]], request, response
             )
         }
     }
@@ -122,12 +123,12 @@ class ShiroGrailsExceptionResolver  extends SimpleMappingExceptionResolver imple
         String targetUri = getTargetUri(request)
         String redirectUri = grailsApplication.config.getProperty('security.shiro.unauthorized.uri')
         if (redirectUri) {
-            redirect([uri: redirectUri],request, response)
+            redirect([uri: redirectUri], request, response)
         } else {
             redirect(
                     [controller: (grailsApplication.config.getProperty('security.shiro.unauthorized.controller') ?: "auth"),
-                    action: (grailsApplication.config.getProperty('security.shiro.unauthorized.action') ?: "unauthorized"),
-                    params: [targetUri: targetUri.toString()]], request, response
+                     action    : (grailsApplication.config.getProperty('security.shiro.unauthorized.action') ?: "unauthorized"),
+                     params    : [targetUri: targetUri.toString()]], request, response
             )
         }
     }

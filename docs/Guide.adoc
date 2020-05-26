@@ -73,7 +73,7 @@ inplace of IllegalArgumentException for missing arguments.
 == Getting started
 
 If you're implementing your security from scratch, then you can simply install grails-shiro by adding
-`compile "org.grails.plugins:grails-shiro:3.0"` to your build.gradle dependencies and typing
+`compile "org.grails.plugins:grails-shiro:4.3"` to your build.gradle dependencies and typing
 <<shiro quick start,'grails shiro-quick-start'>>.
 
 This will create a ShiroWildcardDbRealm in your `grails-app/realms` directory and make a ShiroUser and ShiroRole domain

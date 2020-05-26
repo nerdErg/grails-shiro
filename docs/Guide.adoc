@@ -8,7 +8,7 @@ v4.1, August 2019
 :stylesdir: resources/style/
 :stylesheet: asciidoctor.css
 :description: Grails Shiro plugin guide
-:keywords: documentation, Grails, Shiro, 3.3.10, 1.4.1
+:keywords: documentation, Grails, Shiro
 :links:
 :numbered:
 :sectlinks:
@@ -27,7 +27,7 @@ Another aim is to make this grails part well tested, so you can trust that it is
 
 == Changes
 
-=== Plugin v4.3 Shiro 1.5.3
+=== Plugin v4.3 & v3.3 Shiro 1.5.3
 
 * Fixed Unauthorized redirect missing context path - https://github.com/nerdErg/grails-shiro/issues/16
 * Upgrade to shiro 1.5.3

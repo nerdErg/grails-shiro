@@ -16,7 +16,6 @@
 package org.apache.shiro.grails
 
 import groovy.transform.CompileStatic
-import org.apache.commons.lang.NotImplementedException
 import org.apache.shiro.authc.*
 import org.apache.shiro.authz.AuthorizationException
 import org.apache.shiro.authz.Authorizer

@@ -16,8 +16,8 @@ image:https://travis-ci.org/nerdErg/grails-shiro.svg?branch=master["Build Status
 
 == Versions
 
-* Latest released versions 3.2, 4.2
-* Latest working version 3.3, 4.3
+* Latest *released* versions 3.2, 4.2
+* Latest working version 3.3, 4.3 (in this repo)
 
 This is the Grails Shiro plugin for grails version 4.0.x and Shiro 1.5.3. This was derived from the Grails 2.x version
 (https://github.com/pledbrook/grails-shiro).
@@ -30,7 +30,7 @@ https://github.com/nerdErg/grails-shiro/blob/master/docs/Guide.adoc[Guide] in th
 
 In general the version number is following the Grails major version it supports, then release. e.g.
 
- 3.2 = Grails 3 plugin release 3
+ 3.3 = Grails 3 plugin release 3
  4.3 = Grails 4 plugin release 3
 
 === Maintenance
@@ -40,7 +40,7 @@ backporting features till July 2020 where possible.
 === Documentation and Source
 
 In general the documentation applies to both Grails 3 and 4 versions of the plugin. Source code including specific documentation
-for the Grails 3 version can be found in the Grails-3 Branch.
+for the Grails 3 version can be found in the *Grails-3 Branch*.
 
 == Installation
 
@@ -50,7 +50,7 @@ To install, add this to your `build.gradle` dependencies for Grails 4:
 
 and this for Grails 3:
 
- compile "org.grails.plugins:grails-shiro:3.2"
+ compile "org.grails.plugins:grails-shiro:3.3"
 
 == Getting started
 

@@ -102,6 +102,10 @@ To build the plugin yourself and install it from this repo:
 2. run `gradle install` and that will build, test, install it to your local maven repo (~/.m2)
 3. profit!
 
+== Publishing
+
+If you have the credentials to publish the plugin just run the `gradle bintrayUpload` task.
+
 == Kudos
 
 * https://github.com/pledbrook/grails-shiro/commits?author=pledbrook[Peter Ledbrook] looking after original grails shiro plugin

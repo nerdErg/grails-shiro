@@ -28,6 +28,7 @@ class ShiroGrailsExceptionResolver extends SimpleMappingExceptionResolver implem
     private LinkGenerator linkGenerator
     private RequestDataValueProcessor requestDataValueProcessor
     private Collection<RedirectEventListener> redirectListeners
+    private ResponseRedirector responseRedirector
 
     @Autowired(required = false)
     void setRedirectListeners(Collection<RedirectEventListener> redirectListeners) {
@@ -44,11 +45,28 @@ class ShiroGrailsExceptionResolver extends SimpleMappingExceptionResolver implem
         this.linkGenerator = linkGenerator
     }
 
-    LinkGenerator getGrailsLinkGenerator() {
-        if (this.linkGenerator == null) {
-            this.linkGenerator = webRequest.getApplicationContext().getBean(LinkGenerator)
+    @Override
+    void setGrailsApplication(GrailsApplication grailsApplication) {
+        this.grailsApplication = grailsApplication
+    }
+
+    /* for testing */
+    void setResponseRedirector(ResponseRedirector redirector){
+        responseRedirector = redirector
+    }
+
+    private ResponseRedirector getRedirector() {
+        if(responseRedirector == null) {
+            responseRedirector = new ResponseRedirector(getGrailsLinkGenerator())
         }
-        return this.linkGenerator
+        return responseRedirector
+    }
+
+    private LinkGenerator getGrailsLinkGenerator() {
+        if (linkGenerator == null) {
+            linkGenerator = webRequest.getApplicationContext().getBean(LinkGenerator)
+        }
+        return linkGenerator
     }
 
     @Override
@@ -56,7 +74,7 @@ class ShiroGrailsExceptionResolver extends SimpleMappingExceptionResolver implem
                                   Object handler, Exception ex) {
         Exception authEx = findAuthException(ex)
         if (authEx) {
-            setAuthmsg(authEx, request)
+            request.session["Authmsg"] = getAuthmsg(authEx)
             if (authEx instanceof UnauthenticatedException) {
                 loginRedirect(request, response)
                 return new ModelAndView()
@@ -69,12 +87,14 @@ class ShiroGrailsExceptionResolver extends SimpleMappingExceptionResolver implem
         return null
     }
 
-    private static void setAuthmsg(Exception ex, HttpServletRequest request) {
-        request.session["Authmsg"] = ex.message.startsWith('This subject is anonymous -') ? 'You need to log in to do this.' : ex.message
-
+    protected static String getAuthmsg(Exception ex) {
+        if(ex && ex.message && ex.message.startsWith('This subject is anonymous -')){
+            return 'You need to log in to do this.'
+        }
+        return ex.message
     }
 
-    private static Exception findAuthException(Exception e) {
+    static Exception findAuthException(Exception e) {
         if (e instanceof AuthorizationException) {
             return e
         }
@@ -93,7 +113,7 @@ class ShiroGrailsExceptionResolver extends SimpleMappingExceptionResolver implem
         return e
     }
 
-    private void loginRedirect(HttpServletRequest request, HttpServletResponse response) {
+    protected void loginRedirect(HttpServletRequest request, HttpServletResponse response) {
 
         String targetUri = getTargetUri(request)
         String redirectUri = grailsApplication.config.getProperty('security.shiro.login.uri')
@@ -109,7 +129,7 @@ class ShiroGrailsExceptionResolver extends SimpleMappingExceptionResolver implem
         }
     }
 
-    private void unauthorizedRedirect(HttpServletRequest request, HttpServletResponse response) {
+    protected void unauthorizedRedirect(HttpServletRequest request, HttpServletResponse response) {
         String targetUri = getTargetUri(request)
         String redirectUri = grailsApplication.config.getProperty('security.shiro.unauthorized.uri')
         if (redirectUri) {
@@ -129,15 +149,13 @@ class ShiroGrailsExceptionResolver extends SimpleMappingExceptionResolver implem
      * @param argMap The arguments
      * @return null
      */
-    void redirect(Map argMap, HttpServletRequest request, HttpServletResponse response) {
+    protected void redirect(Map argMap, HttpServletRequest request, HttpServletResponse response) {
 
         if (argMap.isEmpty()) {
             throw new IllegalArgumentException("Invalid arguments for method 'redirect': $argMap")
         }
 
-        getGrailsLinkGenerator()
-
-        ResponseRedirector redirector = new ResponseRedirector(getGrailsLinkGenerator())
+        ResponseRedirector redirector = getRedirector()
         redirector.setRedirectListeners redirectListeners
         redirector.setRequestDataValueProcessor requestDataValueProcessor
         redirector.setUseJessionId false
@@ -154,8 +172,4 @@ class ShiroGrailsExceptionResolver extends SimpleMappingExceptionResolver implem
         query ? '?' + query.replaceFirst(/^\?/, '') : ''
     }
 
-    @Override
-    void setGrailsApplication(GrailsApplication grailsApplication) {
-        this.grailsApplication = grailsApplication
-    }
 }

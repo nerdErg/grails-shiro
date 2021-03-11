@@ -1,7 +1,7 @@
 buildscript {
     ext {
         grailsVersion = project.grailsVersion
-        shiroVersion = "1.5.3"
+        shiroVersion = "1.7.1"
     }
     repositories {
         mavenLocal()
@@ -15,7 +15,7 @@ buildscript {
     }
 }
 
-version "3.3"
+version "3.4"
 group "org.grails.plugins"
 
 apply plugin: "eclipse"

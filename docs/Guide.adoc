@@ -13,7 +13,7 @@ v4.1, August 2019
 :numbered:
 :sectlinks:
 
-Documentation for the Grails 3 & 4 shiro plugin, Shiro 1.5.3
+Documentation for the Grails 3 & 4 shiro plugin, Shiro 1.7.1
 
 == Concept and Aim
 

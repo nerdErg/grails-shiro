@@ -45,6 +45,7 @@ class LdapServer implements CredentialsMatcher {
     String permMemberElement
     String permMemberPrefix
 
+    SearchControls searchCtls = new SearchControls();
 
     private String cachedUrl
 
@@ -59,10 +60,7 @@ class LdapServer implements CredentialsMatcher {
         ldapSearch { InitialDirContext ctx, String ldapUrl ->
 
             // Look up the DN for the LDAP entry that has a 'uid' value matching the given username.
-            def matchAttrs = new BasicAttributes(true)
-            matchAttrs.put(new BasicAttribute(usernameAttribute, userToken.username))
-
-            NamingEnumeration<SearchResult> result = ctx.search(searchBase, matchAttrs)
+            NamingEnumeration<SearchResult> result = ctx.search(searchBase, "$usernameAttribute=$userToken.username", searchCtls)
             if (!result.hasMore()) {
                 return false
             }
@@ -94,10 +92,7 @@ class LdapServer implements CredentialsMatcher {
     List<String> roles(String userName) {
         List<String> roles = []
         ldapSearch { InitialDirContext ctx, String ldapUrl ->
-            BasicAttributes matchAttrs = new BasicAttributes(true)
-            matchAttrs.put(new BasicAttribute(groupMemberElement, "$groupMemberPrefix$userName$groupMemberPostfix"))
-
-            NamingEnumeration<SearchResult> result = ctx.search(groupOu, matchAttrs)
+            NamingEnumeration<SearchResult> result = ctx.search(groupOu, "$groupMemberElement=$groupMemberPrefix$userName$groupMemberPostfix", searchCtls)
 
             while (result.hasMore()) {
                 SearchResult group = result.next()
@@ -183,10 +178,7 @@ class LdapServer implements CredentialsMatcher {
 
             // Look up the DN for the LDAP entry that has a 'uid' value
             // matching the given username.
-            BasicAttributes matchAttrs = new BasicAttributes(true)
-            matchAttrs.put(new BasicAttribute(usernameAttribute, userName))
-
-            NamingEnumeration<SearchResult> result = ctx.search(searchBase, matchAttrs)
+            NamingEnumeration<SearchResult> result = ctx.search(searchBase, "$usernameAttribute=$userName", searchCtls)
             if (result.hasMore()) {
                 SearchResult searchResult = result.next()
                 searchResult.attributes.all.each { Attribute attr ->
@@ -228,10 +220,11 @@ class LdapServer implements CredentialsMatcher {
         return cachedUrl
     }
 
-    private static InitialDirContext getLDAPContext(String user, String password, String ldapUrl) {
+    protected InitialDirContext getLDAPContext(String user, String password, String ldapUrl) {
         // Set up the configuration for the LDAP search we are about to do.
         Hashtable env = getBaseLDAPEnvironment(user, password)
         env[Context.PROVIDER_URL] = ldapUrl
+        env[Context.REFERRAL] = 'follow'
         return new InitialDirContext(env)
     }
 

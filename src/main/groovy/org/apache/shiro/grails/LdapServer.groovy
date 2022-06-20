@@ -16,6 +16,7 @@ import javax.naming.directory.Attributes
 import javax.naming.directory.BasicAttribute
 import javax.naming.directory.BasicAttributes
 import javax.naming.directory.InitialDirContext
+import javax.naming.directory.SearchControls
 import javax.naming.directory.SearchResult
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -46,6 +47,7 @@ class LdapServer implements CredentialsMatcher {
     String permMemberPrefix
 
     SearchControls searchCtls = new SearchControls();
+    Hashtable env = new Hashtable()
 
     private String cachedUrl
 
@@ -222,24 +224,21 @@ class LdapServer implements CredentialsMatcher {
 
     protected InitialDirContext getLDAPContext(String user, String password, String ldapUrl) {
         // Set up the configuration for the LDAP search we are about to do.
-        Hashtable env = getBaseLDAPEnvironment(user, password)
+        getBaseLDAPEnvironment(user, password)
         env[Context.PROVIDER_URL] = ldapUrl
-        env[Context.REFERRAL] = 'follow'
         return new InitialDirContext(env)
     }
 
-    private static Hashtable getBaseLDAPEnvironment(String user, String password) {
-        def env = new Hashtable()
+    protected void getBaseLDAPEnvironment(String user, String password) {
         env[Context.INITIAL_CONTEXT_FACTORY] = "com.sun.jndi.ldap.LdapCtxFactory"
+        env[Context.REFERRAL] = 'follow'
         if (user) {
             // Non-anonymous access for the search.
             env[Context.SECURITY_AUTHENTICATION] = "simple"
             env[Context.SECURITY_PRINCIPAL] = user
             env[Context.SECURITY_CREDENTIALS] = password
         }
-        return env
     }
-
 }
 
 class LdapUser implements PrincipalHolder {

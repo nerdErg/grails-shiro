@@ -196,8 +196,8 @@ Enables Grails applications to take advantage of the Apache Shiro security layer
             }
 
             boolean enableBasicFilter = grailsApplication.config.getProperty('security.shiro.filter.basic.enabled')
-            String basicAppName = grailsApplication.config.getProperty('security.shiro.filter.basic.appName') ?: grailsApplication.config.info.app.name
-            if (enableBasicFilter) {
+            String basicAppName = grailsApplication.config.getProperty('security.shiro.filter.basic.appName') ?: grailsApplication.config.getProperty('info.app.name')
+                        if (enableBasicFilter) {
                 authcBasicFilter(BasicHttpAuthenticationFilter) {
                     applicationName = basicAppName
                 }

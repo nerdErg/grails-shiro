@@ -1,34 +1,37 @@
 buildscript {
     ext {
         grailsVersion = project.grailsVersion
-        shiroVersion = "1.7.1"
+        apacheShiroVersion = "1.13.0"
     }
     repositories {
         mavenLocal()
         maven { url "https://repo.grails.org/grails/core" }
-        maven { url "https://dl.bintray.com/jfrog/jfrog-jars" }
+//        maven { url "https://dl.bintray.com/jfrog/jfrog-jars" }
     }
     dependencies {
-        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
-        classpath "org.grails:grails-gradle-plugin:$grailsVersion"
-        classpath "org.asciidoctor:asciidoctor-gradle-plugin:1.5.9.2"
+//        classpath "com.vanniktech:gradle-dependency-graph-generator-plugin:0.8.0"
+//        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
+        classpath "org.grails:grails-gradle-plugin:$grailsGradlePluginVersion"
+        classpath "org.asciidoctor:asciidoctor-gradle-plugin:1.6.1"
     }
 }
 
-version "4.4"
+version "4.5"
 group "org.grails.plugins"
 
 apply plugin: "eclipse"
 apply plugin: "idea"
 apply plugin: "org.grails.grails-plugin"
-apply plugin: "org.grails.grails-plugin-publish"
+//apply plugin: "org.grails.grails-plugin-publish"
 apply plugin: "org.grails.grails-gsp"
 apply plugin: 'org.asciidoctor.convert'
+apply plugin:"maven-publish"
+//apply plugin: "com.vanniktech.dependency.graph.generator"
 
 repositories {
     mavenLocal()
     maven { url "https://repo.grails.org/grails/core" }
-    maven { url "https://dl.bintray.com/jfrog/jfrog-jars" }
+//    maven { url "https://dl.bintray.com/jfrog/jfrog-jars" }
 }
 
 configurations {
@@ -40,22 +43,38 @@ configurations {
 
 dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
-    compile "org.springframework.boot:spring-boot-starter-logging"
-    compile "org.springframework.boot:spring-boot-autoconfigure"
-    compile "org.springframework.boot:spring-boot-starter-actuator"
-    compile "org.springframework.boot:spring-boot-starter-tomcat"
-    compile "org.grails:grails-plugin-url-mappings"
-    compile "org.grails:grails-plugin-interceptors"
-    compile "org.mindrot:jbcrypt:0.4"
-    console "org.grails:grails-console"
     compileOnly "io.micronaut:micronaut-inject-groovy"
+    console "org.grails:grails-console"
+    implementation "org.springframework.boot:spring-boot-starter-logging"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation "org.springframework.boot:spring-boot-autoconfigure"
+    implementation "org.grails:grails-core"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation "org.springframework.boot:spring-boot-starter-tomcat"
+    implementation "org.grails:grails-web-boot"
+    implementation "org.grails:grails-logging"
+    implementation "org.grails:grails-plugin-rest"
+    implementation "org.grails:grails-plugin-databinding"
+    implementation "org.grails:grails-plugin-i18n"
+    implementation "org.grails:grails-plugin-services"
+    implementation "org.grails:grails-plugin-url-mappings"
+    implementation "org.grails:grails-plugin-interceptors"
+    implementation "org.grails.plugins:cache"
+    implementation "org.grails.plugins:async"
+    implementation "org.grails.plugins:scaffolding"
+    implementation "org.grails.plugins:gsp"
     profile "org.grails.profiles:web-plugin"
-    testCompile "org.grails:grails-gorm-testing-support"
-    testCompile "org.mockito:mockito-core"
-    testCompile "org.grails:grails-web-testing-support"
+    runtimeOnly "com.bertramlabs.plugins:asset-pipeline-grails:3.3.4"
+    testImplementation "io.micronaut:micronaut-inject-groovy"
+    testImplementation "org.grails:grails-gorm-testing-support"
+    testImplementation "org.mockito:mockito-core"
+    testImplementation "org.grails:grails-web-testing-support"
 
-    ['ehcache', 'core', 'spring', 'web'].each { pkg ->
-        compile("org.apache.shiro:shiro-$pkg:$shiroVersion") {
+
+    implementation 'org.mindrot:jbcrypt:0.4'
+
+    ['ehcache', 'core', 'spring', 'web', 'crypto-cipher'].each { pkg ->
+        implementation("org.apache.shiro:shiro-$pkg:$apacheShiroVersion") {
             exclude module: 'ejb'
             exclude module: 'jsf-api'
             exclude module: 'servlet-api'
@@ -80,20 +99,20 @@ bootRun {
 // enable if you wish to package this plugin as a standalone application
 bootJar.enabled = false
 
-grailsPublish {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
-    userOrg = 'nerderg'
-    repo = 'plugins'
-    githubSlug = 'nerdErg/grails-shiro'
-    license {
-        name = 'Apache-2.0'
-    }
-    websiteUrl = "http://nerderg.com/Grails+shiro"
-    title = "Grails shrio plugin"
-    desc = "Secure your Grails application quickly and easily using the Apache Shiro security framework."
-    developers = [pmcneil: "Peter McNeil", pledbrook: "Peter Ledbrook", yellowsnow: "yellowsnow"]
-}
+//grailsPublish {
+//    user = System.getenv('BINTRAY_USER')
+//    key = System.getenv('BINTRAY_KEY')
+//    userOrg = 'nerderg'
+//    repo = 'plugins'
+//    githubSlug = 'nerdErg/grails-shiro'
+//    license {
+//        name = 'Apache-2.0'
+//    }
+//    websiteUrl = "http://nerderg.com/Grails+shiro"
+//    title = "Grails shrio plugin"
+//    desc = "Secure your Grails application quickly and easily using the Apache Shiro security framework."
+//    developers = [pmcneil: "Peter McNeil", pledbrook: "Peter Ledbrook", yellowsnow: "yellowsnow"]
+//}
 
 task shiroTest(type: Test) {
     dependsOn "install"
@@ -305,4 +324,22 @@ asciidoctor {
             idseparator         : '-'
 
     outputDir = file("build/docs")
+}
+
+// ./gradlew publishToMavenLocal
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifactId = 'grails-shiro'
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            from components.java
+        }
+    }
 }

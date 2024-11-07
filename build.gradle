@@ -1,7 +1,7 @@
 buildscript {
     ext {
         grailsVersion = project.grailsVersion
-        apacheShiroVersion = "1.13.0"
+        apacheShiroVersion = "2.0.1"
     }
     repositories {
         mavenLocal()

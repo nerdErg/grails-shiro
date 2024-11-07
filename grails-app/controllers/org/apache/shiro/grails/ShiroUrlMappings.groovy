@@ -1,4 +1,4 @@
-
+package org.apache.shiro.grails
 
 class ShiroUrlMappings {
 

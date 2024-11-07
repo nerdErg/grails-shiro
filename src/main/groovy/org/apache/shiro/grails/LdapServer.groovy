@@ -49,7 +49,7 @@ class LdapServer implements CredentialsMatcher {
     SearchControls searchCtls = new SearchControls();
     Hashtable env = new Hashtable()
 
-    private String cachedUrl
+    protected String cachedUrl
 
     LdapServer() {
     }
@@ -199,7 +199,7 @@ class LdapServer implements CredentialsMatcher {
     private String findLDAPServerUrlToUse(String user, String password) {
         if (!cachedUrl) {
             // Set up the configuration for the LDAP search we are about to do.
-            Hashtable env = getBaseLDAPEnvironment(user, password)
+            getBaseLDAPEnvironment(user, password)
 
             // Find an LDAP server that we can connect to.
             InitialDirContext ctx = null

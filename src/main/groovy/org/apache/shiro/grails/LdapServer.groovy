@@ -47,7 +47,6 @@ class LdapServer implements CredentialsMatcher {
     String permMemberPrefix
 
     SearchControls searchCtls = new SearchControls();
-    Hashtable env = new Hashtable()
 
     protected String cachedUrl
 
@@ -108,7 +107,6 @@ class LdapServer implements CredentialsMatcher {
                         matchingNames.add(m.group(1))
                     }
                 }
-
                 roles.addAll(matchingNames)
             }
         }
@@ -199,7 +197,7 @@ class LdapServer implements CredentialsMatcher {
     private String findLDAPServerUrlToUse(String user, String password) {
         if (!cachedUrl) {
             // Set up the configuration for the LDAP search we are about to do.
-            getBaseLDAPEnvironment(user, password)
+            Hashtable env = getBaseLDAPEnvironment(user, password)
 
             // Find an LDAP server that we can connect to.
             InitialDirContext ctx = null
@@ -222,14 +220,15 @@ class LdapServer implements CredentialsMatcher {
         return cachedUrl
     }
 
-    protected InitialDirContext getLDAPContext(String user, String password, String ldapUrl) {
+    private static InitialDirContext getLDAPContext(String user, String password, String ldapUrl) {
         // Set up the configuration for the LDAP search we are about to do.
-        getBaseLDAPEnvironment(user, password)
+        Hashtable env = getBaseLDAPEnvironment(user, password)
         env[Context.PROVIDER_URL] = ldapUrl
         return new InitialDirContext(env)
     }
 
-    protected void getBaseLDAPEnvironment(String user, String password) {
+    private static Hashtable getBaseLDAPEnvironment(String user, String password) {
+        def env = new Hashtable()
         env[Context.INITIAL_CONTEXT_FACTORY] = "com.sun.jndi.ldap.LdapCtxFactory"
         env[Context.REFERRAL] = 'follow'
         if (user) {
@@ -238,6 +237,7 @@ class LdapServer implements CredentialsMatcher {
             env[Context.SECURITY_PRINCIPAL] = user
             env[Context.SECURITY_CREDENTIALS] = password
         }
+        return env
     }
 }
 

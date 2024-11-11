@@ -32,7 +32,7 @@ import org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy
 import org.apache.shiro.authc.pam.ModularRealmAuthenticator
 import org.apache.shiro.authz.permission.WildcardPermissionResolver
 import org.apache.shiro.cache.ehcache.EhCacheManager
-import org.apache.shiro.crypto.AesCipherService
+import org.apache.shiro.crypto.cipher.AesCipherService
 import org.apache.shiro.grails.*
 import org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO
 import org.apache.shiro.spring.LifecycleBeanPostProcessor
@@ -196,8 +196,8 @@ Enables Grails applications to take advantage of the Apache Shiro security layer
             }
 
             boolean enableBasicFilter = grailsApplication.config.getProperty('security.shiro.filter.basic.enabled')
-            String basicAppName = grailsApplication.config.getProperty('security.shiro.filter.basic.appName') ?: grailsApplication.config.info.app.name
-            if (enableBasicFilter) {
+            String basicAppName = grailsApplication.config.getProperty('security.shiro.filter.basic.appName') ?: grailsApplication.config.getProperty('info.app.name')
+                        if (enableBasicFilter) {
                 authcBasicFilter(BasicHttpAuthenticationFilter) {
                     applicationName = basicAppName
                 }

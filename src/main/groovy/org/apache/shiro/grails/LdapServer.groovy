@@ -16,7 +16,10 @@ import javax.naming.directory.Attributes
 import javax.naming.directory.BasicAttribute
 import javax.naming.directory.BasicAttributes
 import javax.naming.directory.InitialDirContext
+import javax.naming.directory.SearchControls
 import javax.naming.directory.SearchResult
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 /**
  * User: pmcneil
@@ -36,12 +39,16 @@ class LdapServer implements CredentialsMatcher {
     String groupMemberElement
     String groupMemberPrefix
     String groupMemberPostfix
+    String memberAttribute = 'cn'
+    String groupPattern = '(.*)'
 
     String permSubCn
     String permMemberElement
     String permMemberPrefix
 
-    private String cachedUrl
+    SearchControls searchCtls = new SearchControls();
+
+    protected String cachedUrl
 
     LdapServer() {
     }
@@ -54,10 +61,7 @@ class LdapServer implements CredentialsMatcher {
         ldapSearch { InitialDirContext ctx, String ldapUrl ->
 
             // Look up the DN for the LDAP entry that has a 'uid' value matching the given username.
-            def matchAttrs = new BasicAttributes(true)
-            matchAttrs.put(new BasicAttribute(usernameAttribute, userToken.username))
-
-            NamingEnumeration<SearchResult> result = ctx.search(searchBase, matchAttrs)
+            NamingEnumeration<SearchResult> result = ctx.search(searchBase, "$usernameAttribute=$userToken.username", searchCtls)
             if (!result.hasMore()) {
                 return false
             }
@@ -76,19 +80,34 @@ class LdapServer implements CredentialsMatcher {
         }
     }
 
+    /**
+     * Get the roles for a particular user
+     * To configure for Active Directory, set memberAttribute to be 'memberof' and
+     * set groupPattern to extract the groups from the place in the hierarchy you want to look, with the first
+     * group capture as the group name. e.g. 'CN=([^,]*),OU=mysubsubgroup,OU=mysubgroup,OU=mygroup'
+     * For regular ldap, it depends on your setup, but typically memberAttribute would be 'cn', and groupPattern
+     * would be all, i.e. '(.*)'.
+     * @param userName ldap user name to retrieve groups for
+     * @return list of group names
+     */
     List<String> roles(String userName) {
         List<String> roles = []
         ldapSearch { InitialDirContext ctx, String ldapUrl ->
-            BasicAttributes matchAttrs = new BasicAttributes(true)
-            matchAttrs.put(new BasicAttribute(groupMemberElement, "$groupMemberPrefix$userName$groupMemberPostfix"))
-
-            NamingEnumeration<SearchResult> result = ctx.search(groupOu, matchAttrs)
+            NamingEnumeration<SearchResult> result = ctx.search(groupOu, "$groupMemberElement=$groupMemberPrefix$userName$groupMemberPostfix", searchCtls)
 
             while (result.hasMore()) {
                 SearchResult group = result.next()
-                Attribute cnAttr = group.attributes.get('cn')
+                Attribute cnAttr = group.attributes.get(memberAttribute)
                 List<String> names = cnAttr.all.collect { it as String }
-                roles.addAll(names)
+                List<String> matchingNames = new ArrayList<>()
+                Pattern p = Pattern.compile(groupPattern)
+                names.each {
+                    Matcher m = p.matcher(it)
+                    if (m.find()) {
+                        matchingNames.add(m.group(1))
+                    }
+                }
+                roles.addAll(matchingNames)
             }
         }
         return roles
@@ -159,10 +178,7 @@ class LdapServer implements CredentialsMatcher {
 
             // Look up the DN for the LDAP entry that has a 'uid' value
             // matching the given username.
-            BasicAttributes matchAttrs = new BasicAttributes(true)
-            matchAttrs.put(new BasicAttribute(usernameAttribute, userName))
-
-            NamingEnumeration<SearchResult> result = ctx.search(searchBase, matchAttrs)
+            NamingEnumeration<SearchResult> result = ctx.search(searchBase, "$usernameAttribute=$userName", searchCtls)
             if (result.hasMore()) {
                 SearchResult searchResult = result.next()
                 searchResult.attributes.all.each { Attribute attr ->
@@ -214,6 +230,7 @@ class LdapServer implements CredentialsMatcher {
     private static Hashtable getBaseLDAPEnvironment(String user, String password) {
         def env = new Hashtable()
         env[Context.INITIAL_CONTEXT_FACTORY] = "com.sun.jndi.ldap.LdapCtxFactory"
+        env[Context.REFERRAL] = 'follow'
         if (user) {
             // Non-anonymous access for the search.
             env[Context.SECURITY_AUTHENTICATION] = "simple"
@@ -222,7 +239,6 @@ class LdapServer implements CredentialsMatcher {
         }
         return env
     }
-
 }
 
 class LdapUser implements PrincipalHolder {

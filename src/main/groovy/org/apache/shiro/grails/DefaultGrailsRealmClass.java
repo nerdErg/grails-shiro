@@ -17,11 +17,19 @@
  *
  * Modified 2009 Bradley Beddoes, Intient Pty Ltd, Ported to Apache Ki
  * Modified 2009 Kapil Sachdeva, Gemalto Inc, Ported to Apache Shiro
+ * Modified 2019,2024 Peter McNeil
  */
 package org.apache.shiro.grails;
 
 import org.grails.core.AbstractInjectableGrailsClass;
 
+/**
+ * Represents a default implementation of the {@link GrailsRealmClass} interface.
+ * This class is a wrapper around the specified class to provide meta-information and behavior specific to
+ * Realms.
+ * Extends {@link AbstractInjectableGrailsClass} and implements the {@link GrailsRealmClass}
+ * interface to conform to the expected behaviour for a realm.
+ */
 public class DefaultGrailsRealmClass extends AbstractInjectableGrailsClass implements GrailsRealmClass {
     public DefaultGrailsRealmClass(Class<?> wrappedClass) {
         super(wrappedClass, RealmArtefactHandler.TYPE);

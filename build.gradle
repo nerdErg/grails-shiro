@@ -1,19 +1,19 @@
 buildscript {
     ext {
         grailsVersion = project.grailsVersion
-        shiroVersion = "1.13.0"
+        shiroVersion = project.shiroVersion
     }
     repositories {
         mavenLocal()
         maven { url "https://repo.grails.org/grails/core" }
     }
     dependencies {
-        classpath "org.grails:grails-gradle-plugin:$grailsVersion"
-        classpath "org.asciidoctor:asciidoctor-gradle-plugin:1.5.9.2"
+        classpath "org.grails:grails-gradle-plugin:$grailsGradlePluginVersion"
+        classpath "org.asciidoctor:asciidoctor-gradle-plugin:1.6.1"
     }
 }
 
-version "4.5.9"
+version "5.0.0"
 group "com.nerderg.plugins"
 
 apply plugin: "eclipse"
@@ -37,22 +37,22 @@ configurations {
 
 dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
-    compile "org.springframework.boot:spring-boot-starter-logging"
-    compile "org.springframework.boot:spring-boot-autoconfigure"
-    compile "org.springframework.boot:spring-boot-starter-actuator"
-    compile "org.springframework.boot:spring-boot-starter-tomcat"
-    compile "org.grails:grails-plugin-url-mappings"
-    compile "org.grails:grails-plugin-interceptors"
-    compile "org.mindrot:jbcrypt:0.4"
+    implementation "org.springframework.boot:spring-boot-starter-logging"
+    implementation "org.springframework.boot:spring-boot-autoconfigure"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation "org.springframework.boot:spring-boot-starter-tomcat"
+    implementation "org.grails:grails-plugin-url-mappings"
+    implementation "org.grails:grails-plugin-interceptors"
+    implementation "org.mindrot:jbcrypt:0.4"
     console "org.grails:grails-console"
     compileOnly "io.micronaut:micronaut-inject-groovy"
     profile "org.grails.profiles:web-plugin"
-    testCompile "org.grails:grails-gorm-testing-support"
-    testCompile "org.mockito:mockito-core"
-    testCompile "org.grails:grails-web-testing-support"
+    testCompileOnly "org.grails:grails-gorm-testing-support"
+    testCompileOnly "org.mockito:mockito-core"
+    testCompileOnly "org.grails:grails-web-testing-support"
 
     ['ehcache', 'core', 'spring', 'web'].each { pkg ->
-        compile("org.apache.shiro:shiro-$pkg:$shiroVersion") {
+        implementation("org.apache.shiro:shiro-$pkg:$shiroVersion") {
             exclude module: 'ejb'
             exclude module: 'jsf-api'
             exclude module: 'servlet-api'
@@ -156,16 +156,33 @@ task shiroTest(type: Test) {
 
         //add the plugin
         File build = new File("$projectDir/src/test/app/shiro-tester/build.gradle")
-        String content = build.text.replaceFirst('\ndependencies \\{', """dependencies {
+        String content = build
+                .text
+                .replaceFirst('\ndependencies \\{', """dependencies {
     implementation "com.nerderg.plugins:grails-shiro:${version}" 
     testImplementation "net.sourceforge.htmlunit:htmlunit:2.70.0"
     testRuntimeOnly 'org.seleniumhq.selenium:htmlunit3-driver:4.26.0'
+    ['ehcache', 'core', 'spring', 'web'].each { pkg ->
+        implementation("org.apache.shiro:shiro-" + pkg + ":${shiroVersion}") {
+            exclude module: 'ejb'
+            exclude module: 'jsf-api'
+            exclude module: 'servlet-api'
+            exclude module: 'jsp-api'
+            exclude module: 'jstl'
+            exclude module: 'jms'
+            exclude module: 'connector-api'
+            exclude module: 'ehcache-core'
+            exclude module: 'slf4j-api'
+            exclude module: 'commons-logging'
+        }
+    }
 """)
-        content = content.replaceAll(/repositories \{/, '''repositories {
+                .replaceAll(/repositories \{/, '''repositories {
 mavenLocal()''')
-                         .replaceAll(/chromedriver \{\n *version = '[^']*'/, '''chromedriver {
+                .replaceAll(/chromedriver \{\n *version = '[^']*'/, '''chromedriver {
             version = '130.0.6723.59\'''')
-                         .replace('classpath "gradle.plugin.com.github.erdi.webdriver-binaries:webdriver-binaries-gradle-plugin:2.6"', 'classpath "com.github.erdi:webdriver-binaries-gradle-plugin:3.2"')
+                .replace('classpath "gradle.plugin.com.github.erdi.webdriver-binaries:webdriver-binaries-gradle-plugin:2.6"',
+                        'classpath "com.github.erdi:webdriver-binaries-gradle-plugin:3.2"')
         build.write(content)
         //add LDAP config
 
@@ -264,7 +281,22 @@ task shiroCliTest(type: Test) {
         String content = build
                 .text
                 .replaceFirst('\ndependencies \\{', """dependencies {
-    implementation "com.nerderg.plugins:grails-shiro:${version}" """)
+    implementation "com.nerderg.plugins:grails-shiro:${version}"
+    ['ehcache', 'core', 'spring', 'web'].each { pkg ->
+        implementation("org.apache.shiro:shiro-" + pkg + ":${shiroVersion}") {
+            exclude module: 'ejb'
+            exclude module: 'jsf-api'
+            exclude module: 'servlet-api'
+            exclude module: 'jsp-api'
+            exclude module: 'jstl'
+            exclude module: 'jms'
+            exclude module: 'connector-api'
+            exclude module: 'ehcache-core'
+            exclude module: 'slf4j-api'
+            exclude module: 'commons-logging'
+        }
+    }
+ """)
                 .replaceAll(/repositories \{/, '''repositories {
 mavenLocal()''')
                 .replaceAll(/chromedriver \{\n *version = '[^']*'/, '''chromedriver {

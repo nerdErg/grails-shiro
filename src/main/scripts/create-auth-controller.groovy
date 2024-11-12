@@ -1,7 +1,6 @@
-import grails.codegen.model.Model
-
 /*
- * Copyright 2007 Peter Ledbrook.
+ * Original Copyright 2007 Peter Ledbrook.
+ * Copyright 2019 Peter McNeil
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +19,7 @@ import grails.codegen.model.Model
  * Modified 2015 Yellowsnow, Arkilog, Migrated to Grails 3
  * re-written 2019 Peter McNeil, Migrated to Grails 3.3.10 and modified to include an AuthInterceptor
  */
-
+import grails.codegen.model.Model
 
 description("Creates a new Shiro AuthController and AuthInterceptor from a template.") {
     usage "grails create-auth-controller [name]"

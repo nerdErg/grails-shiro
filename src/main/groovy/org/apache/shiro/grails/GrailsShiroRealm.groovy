@@ -1,4 +1,6 @@
 /*
+ * Copyright 2019 Peter McNeil.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -10,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package org.apache.shiro.grails
@@ -36,7 +37,7 @@ import org.slf4j.LoggerFactory
  *
  * @author Peter McNeil
  */
-//TODO removed static compilation from class and placed on methods because of groovy compiler error.
+//TODO: removed static compilation from class and placed on methods because of groovy compiler error.
 //"Couldn't find trait helper classes on compile classpath!" see Traits.java line 159
 //This doesn't happen if you remove the implements clause from the trait. Needs further investigation.
 //@CompileStatic

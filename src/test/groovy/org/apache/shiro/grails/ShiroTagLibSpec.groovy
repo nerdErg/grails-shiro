@@ -147,7 +147,7 @@ class ShiroTagLibSpec extends Specification implements TagLibUnitTest<ShiroTagLi
     @Unroll
     void "test hasRole tag #name"() {
         when: "the user has role"
-        mockSubject["hasRole"] = { String name -> name == role }
+        mockSubject["hasRole"] = { String n -> n == role }
 
         then: "we get the expected result"
         result == applyTemplate(tag)

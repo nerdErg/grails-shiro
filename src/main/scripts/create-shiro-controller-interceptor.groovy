@@ -1,7 +1,6 @@
-import grails.codegen.model.Model
-
 /*
- * Copyright 2007 Peter Ledbrook.
+ * Original Copyright 2007 Peter Ledbrook.
+ * Copyright 2019 Peter McNeil.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +19,7 @@ import grails.codegen.model.Model
  * Modified 2015 Yellowsnow, Arkilog, Migrated to Grails 3
  * Re-written 2019 Peter McNeil re purposed to fit default controller interceptor
  */
-
+import grails.codegen.model.Model
 
 description("Creates a new Shiro security interceptor for a controller.") {
     usage "grails create-shiro-controller-interceptor [ControllerName]."

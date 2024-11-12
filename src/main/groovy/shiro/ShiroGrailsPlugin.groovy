@@ -1,11 +1,6 @@
-package shiro
-
-
-import grails.artefact.Interceptor
-import grails.core.ArtefactHandler
-
 /*
  * Copyright 2007 Peter Ledbrook.
+ * Copyright 2019 Peter McNeil.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +14,20 @@ import grails.core.ArtefactHandler
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *
- *
  * Modified 2009 Bradley Beddoes, Intient Pty Ltd, Ported to Apache Ki
  * Modified 2009 Kapil Sachdeva, Gemalto Inc, Ported to Apache Shiro
  * Modified 2015 Yellowsnow, Arkilog, Migrated to Grails 3
  * Refactored 2019 Peter McNeil, Grails 3.3.10 and cleanup/refactor
+ * Updated 2019 Peter McNeil & Animator013 Grails 4 Shiro 1.4.2
+ * 2020 Update to Shiro 1.5.3 Peter McNeil
+ * 2021 update to Shiro 1.7.1 Peter McNeil
+ * 2024 Update to Shiro 1.8.0, 1.13.0 Peter McNeil
+ * 2024 Upgrade to Grails 5.3.6 Shiro 2.0.1 Peter McNeil help from Chris Bitmead
  */
+package shiro
+
+import grails.artefact.Interceptor
+import grails.core.ArtefactHandler
 
 import grails.core.GrailsClass
 import grails.plugins.Plugin
@@ -33,7 +35,7 @@ import org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy
 import org.apache.shiro.authc.pam.ModularRealmAuthenticator
 import org.apache.shiro.authz.permission.WildcardPermissionResolver
 import org.apache.shiro.cache.ehcache.EhCacheManager
-import org.apache.shiro.crypto.AesCipherService
+import org.apache.shiro.crypto.cipher.AesCipherService
 import org.apache.shiro.grails.*
 import org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO
 import org.apache.shiro.spring.LifecycleBeanPostProcessor
@@ -55,7 +57,7 @@ import static javax.servlet.DispatcherType.REQUEST
 class ShiroGrailsPlugin extends Plugin {
 
     // the version or versions of Grails the plugin is designed for
-    def grailsVersion = "4.0.0 > *"
+    def grailsVersion = "5.0.0 > *"
     // resources that are excluded from plugin packaging
     def pluginExcludes = []
 
@@ -197,7 +199,7 @@ Enables Grails applications to take advantage of the Apache Shiro security layer
             }
 
             boolean enableBasicFilter = grailsApplication.config.getProperty('security.shiro.filter.basic.enabled')
-            String basicAppName = grailsApplication.config.getProperty('security.shiro.filter.basic.appName') ?: grailsApplication.config.info.app.name
+            String basicAppName = grailsApplication.config.getProperty('security.shiro.filter.basic.appName') ?: grailsApplication.config.getProperty('info.app.name')
             if (enableBasicFilter) {
                 authcBasicFilter(BasicHttpAuthenticationFilter) {
                     applicationName = basicAppName

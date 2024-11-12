@@ -1,7 +1,6 @@
-import grails.codegen.model.Model
-
 /*
- * Copyright 2007 Peter Ledbrook.
+ * Original Copyright 2007 Peter Ledbrook.
+ * Copyright 2019 Peter McNeil
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +14,12 @@ import grails.codegen.model.Model
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *
- *
  * Modified 2009 Bradley Beddoes, Intient Pty Ltd, Ported to Apache Ki
  * Modified 2009 Kapil Sachdeva, Gemalto Inc, Ported to Apache Shiro
  * Modified 2015 Yellowsnow, Arkilog, Migrated to Grails 3
  * Rewritten 2019 Peter McNeil
  */
-
+import grails.codegen.model.Model
 
 description("Creates a new LDAP realm from a template that works with wildcard permissions.") {
 	usage "grails create-ldap-realm [name] [--package=com.blah.bang]"

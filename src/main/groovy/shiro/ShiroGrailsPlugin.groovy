@@ -2,6 +2,7 @@ package shiro
 
 
 import grails.artefact.Interceptor
+import grails.core.ArtefactHandler
 
 /*
  * Copyright 2007 Peter Ledbrook.
@@ -78,7 +79,7 @@ Enables Grails applications to take advantage of the Apache Shiro security layer
     def observe = ["controllers"]
     def watchedResources = "file:./grails-app/realms/**/*Realm.groovy"
 
-    def artefacts = [org.apache.shiro.grails.RealmArtefactHandler]
+    List<ArtefactHandler> artefacts = [RealmArtefactHandler] as List<ArtefactHandler>
 
     final static log = LoggerFactory.getLogger(ShiroGrailsPlugin)
     private List<String> realmBeanNames = []
@@ -226,7 +227,7 @@ Enables Grails applications to take advantage of the Apache Shiro security layer
                 filter = ref('shiroFilter')
                 urlPatterns = ['/*']
                 dispatcherTypes = EnumSet.of(REQUEST, ERROR)
-                order = Ordered.HIGHEST_PRECEDENCE + 100
+                order = Ordered.HIGHEST_PRECEDENCE + 1000
             }
             log.info 'Security layer configured.'
         }

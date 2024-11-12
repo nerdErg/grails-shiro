@@ -43,7 +43,7 @@ User: pmcneil -> Roles: admin, editor, user, Permissions: book:* user:* book:rea
     }
 
     @Unroll
-    def "When logged in as #user/#password service method annotations returns [#value] for #theUrl @#select"() {
+    def "When logged in as #user/#password service method annotations returns [#value] for #theUrl"() {
         given:
         go 'auth/signOut'
 

@@ -1,7 +1,7 @@
 buildscript {
     ext {
         grailsVersion = project.grailsVersion
-        shiroVersion = "1.7.1"
+        shiroVersion = "1.8.0"
     }
     repositories {
         mavenLocal()
@@ -15,13 +15,13 @@ buildscript {
     }
 }
 
-version "4.4"
-group "org.grails.plugins"
+version "4.5.8"
+group "com.nerderg.plugins"
 
 apply plugin: "eclipse"
 apply plugin: "idea"
+apply plugin: "maven-publish"
 apply plugin: "org.grails.grails-plugin"
-apply plugin: "org.grails.grails-plugin-publish"
 apply plugin: "org.grails.grails-gsp"
 apply plugin: 'org.asciidoctor.convert'
 
@@ -80,23 +80,46 @@ bootRun {
 // enable if you wish to package this plugin as a standalone application
 bootJar.enabled = false
 
-grailsPublish {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
-    userOrg = 'nerderg'
-    repo = 'plugins'
-    githubSlug = 'nerdErg/grails-shiro'
-    license {
-        name = 'Apache-2.0'
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = project.group
+            artifactId = 'grails-shiro'
+            version = project.version
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+
+            pom {
+                name = "Grails shrio plugin"
+                description = "Secure your Grails application quickly and easily using the Apache Shiro security framework."
+                url = "http://nerderg.com/Grails+shiro"
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'pmcneil'
+                        name = 'Peter McNeil'
+                        email = 'peter@nerderg.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/nerdErg/grails-shiro'
+                    developerConnection = ''
+                }
+            }
+
+        }
     }
-    websiteUrl = "http://nerderg.com/Grails+shiro"
-    title = "Grails shrio plugin"
-    desc = "Secure your Grails application quickly and easily using the Apache Shiro security framework."
-    developers = [pmcneil: "Peter McNeil", pledbrook: "Peter Ledbrook", yellowsnow: "yellowsnow"]
 }
 
+
 task shiroTest(type: Test) {
-    dependsOn "install"
+    dependsOn "publishToMavenLocal"
     //clean up anything left behind
     doFirst {
         delete "$projectDir/src/test/app"
@@ -137,12 +160,15 @@ task shiroTest(type: Test) {
         //add the plugin
         File build = new File("$projectDir/src/test/app/shiro-tester/build.gradle")
         String content = build.text.replaceFirst('\ndependencies \\{', """dependencies {
-    compile "org.grails.plugins:grails-shiro:4.3" 
-    testCompile "net.sourceforge.htmlunit:htmlunit:2.32"
-    testRuntime "org.seleniumhq.selenium:htmlunit-driver:2.32.1"
+    implementation "com.nerderg.plugins:grails-shiro:4.5.8" 
+    testImplementation "net.sourceforge.htmlunit:htmlunit:2.70.0"
+    testRuntimeOnly 'org.seleniumhq.selenium:htmlunit3-driver:4.26.0'
 """)
         content = content.replaceAll(/repositories \{/, '''repositories {
 mavenLocal()''')
+                         .replaceAll(/chromedriver \{\n *version = '[^']*'/, '''chromedriver {
+            version = '130.0.6723.59\'''')
+                         .replace('classpath "gradle.plugin.com.github.erdi.webdriver-binaries:webdriver-binaries-gradle-plugin:2.6"', 'classpath "com.github.erdi:webdriver-binaries-gradle-plugin:3.2"')
         build.write(content)
         //add LDAP config
 
@@ -216,7 +242,7 @@ security:
 }
 
 task shiroCliTest(type: Test) {
-    dependsOn "install"
+    dependsOn "publishToMavenLocal"
     //clean up anything left behind
     doFirst {
         delete "$projectDir/src/test/app"
@@ -238,10 +264,15 @@ task shiroCliTest(type: Test) {
         }
 
         File build = new File("$projectDir/src/test/app/cli-tester/build.gradle")
-        String content = build.text.replaceFirst('\ndependencies \\{', """dependencies {
-    compile "org.grails.plugins:grails-shiro:4.3" """)
-        content = content.replaceAll(/repositories \{/, '''repositories {
+        String content = build
+                .text
+                .replaceFirst('\ndependencies \\{', """dependencies {
+    implementation "com.nerderg.plugins:grails-shiro:4.5.8" """)
+                .replaceAll(/repositories \{/, '''repositories {
 mavenLocal()''')
+                .replaceAll(/chromedriver \{\n *version = '[^']*'/, '''chromedriver {
+            version = '130.0.6723.59\'''')
+                .replace('classpath "gradle.plugin.com.github.erdi.webdriver-binaries:webdriver-binaries-gradle-plugin:2.6"', 'classpath "com.github.erdi:webdriver-binaries-gradle-plugin:3.2"')
         build.write(content)
 
         File settings = new File("$projectDir/src/test/app/cli-tester/settings.gradle")
@@ -280,9 +311,13 @@ tasks.withType(Test) {
 
     doLast {
         println "Stoping LDAP server"
-        exec {
-            workingDir projectDir
-            commandLine 'src/test/fixtures/bin/apacheds-2.0.0.AM25/bin/apacheds.sh', 'stop'
+        try {
+            exec {
+                workingDir projectDir
+                commandLine 'src/test/fixtures/bin/apacheds-2.0.0.AM25/bin/apacheds.sh', 'stop'
+            }
+        } catch (e) {
+            println(e)
         }
         delete "src/test/fixtures/bin/apacheds-2.0.0.AM25"
     }
@@ -298,11 +333,11 @@ asciidoctor {
         from("$sourceDir/resources/images")
         into './resources/images'
     }
-    
+
     attributes 'source-highlighter': 'coderay',
-            toc                 : '',
-            idprefix            : '',
-            idseparator         : '-'
+            toc: '',
+            idprefix: '',
+            idseparator: '-'
 
     outputDir = file("build/docs")
 }

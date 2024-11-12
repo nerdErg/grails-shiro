@@ -1,15 +1,13 @@
 buildscript {
     ext {
         grailsVersion = project.grailsVersion
-        shiroVersion = "1.8.0"
+        shiroVersion = "1.13.0"
     }
     repositories {
         mavenLocal()
         maven { url "https://repo.grails.org/grails/core" }
-        maven { url "https://dl.bintray.com/jfrog/jfrog-jars" }
     }
     dependencies {
-        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
         classpath "org.grails:grails-gradle-plugin:$grailsVersion"
         classpath "org.asciidoctor:asciidoctor-gradle-plugin:1.5.9.2"
     }
@@ -28,7 +26,6 @@ apply plugin: 'org.asciidoctor.convert'
 repositories {
     mavenLocal()
     maven { url "https://repo.grails.org/grails/core" }
-    maven { url "https://dl.bintray.com/jfrog/jfrog-jars" }
 }
 
 configurations {

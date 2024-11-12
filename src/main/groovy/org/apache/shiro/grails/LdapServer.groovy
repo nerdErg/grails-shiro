@@ -145,7 +145,7 @@ class LdapServer implements CredentialsMatcher {
         return userPerms
     }
 
-    private String cleanPermString(String perm) {
+    protected String cleanPermString(String perm) {
         if (perm.startsWith(permMemberPrefix)) {
             perm = perm.substring(permMemberPrefix.size())
         }
@@ -194,7 +194,7 @@ class LdapServer implements CredentialsMatcher {
         return attMap
     }
 
-    private String findLDAPServerUrlToUse(String user, String password) {
+    protected String findLDAPServerUrlToUse(String user, String password) {
         if (!cachedUrl) {
             // Set up the configuration for the LDAP search we are about to do.
             Hashtable env = getBaseLDAPEnvironment(user, password)
@@ -220,14 +220,14 @@ class LdapServer implements CredentialsMatcher {
         return cachedUrl
     }
 
-    private static InitialDirContext getLDAPContext(String user, String password, String ldapUrl) {
+    protected InitialDirContext getLDAPContext(String user, String password, String ldapUrl) {
         // Set up the configuration for the LDAP search we are about to do.
         Hashtable env = getBaseLDAPEnvironment(user, password)
         env[Context.PROVIDER_URL] = ldapUrl
         return new InitialDirContext(env)
     }
 
-    private static Hashtable getBaseLDAPEnvironment(String user, String password) {
+    protected Hashtable getBaseLDAPEnvironment(String user, String password) {
         def env = new Hashtable()
         env[Context.INITIAL_CONTEXT_FACTORY] = "com.sun.jndi.ldap.LdapCtxFactory"
         env[Context.REFERRAL] = 'follow'

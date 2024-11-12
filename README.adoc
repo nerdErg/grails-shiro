@@ -118,8 +118,7 @@ to set where they redirect to.
 To build the plugin yourself and install it from this repo:
 
 1. clone or fork this repo to your machine
-2. run `gradle install` and that will build, test, install it to your local maven repo (~/.m2)
-3. profit!
+2. run `./gradlew publishToMavenLocal` and that will build, test, install it to your local maven repo (~/.m2)
 
 == Publishing
 

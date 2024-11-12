@@ -157,7 +157,7 @@ task shiroTest(type: Test) {
         //add the plugin
         File build = new File("$projectDir/src/test/app/shiro-tester/build.gradle")
         String content = build.text.replaceFirst('\ndependencies \\{', """dependencies {
-    implementation "com.nerderg.plugins:grails-shiro:4.5.8" 
+    implementation "com.nerderg.plugins:grails-shiro:${version}" 
     testImplementation "net.sourceforge.htmlunit:htmlunit:2.70.0"
     testRuntimeOnly 'org.seleniumhq.selenium:htmlunit3-driver:4.26.0'
 """)
@@ -264,7 +264,7 @@ task shiroCliTest(type: Test) {
         String content = build
                 .text
                 .replaceFirst('\ndependencies \\{', """dependencies {
-    implementation "com.nerderg.plugins:grails-shiro:4.5.8" """)
+    implementation "com.nerderg.plugins:grails-shiro:${version}" """)
                 .replaceAll(/repositories \{/, '''repositories {
 mavenLocal()''')
                 .replaceAll(/chromedriver \{\n *version = '[^']*'/, '''chromedriver {

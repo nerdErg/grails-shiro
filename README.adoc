@@ -11,22 +11,26 @@
 :toclevels: 2
 :toc-class: toc2
 :release: 4
-:working-versions: 3.4, 4.4
+:working-versions: 3.4, 4.5.9
 :released-versions: 3.4, 4.4
-
+:next-version: 5.0.0
 
 image:https://travis-ci.org/nerdErg/grails-shiro.svg?branch=master["Build Status", link="https://travis-ci.org/nerdErg/grails-shiro"]
 
 == Versions
 
-* Latest *released* versions {released-versions}
-* Latest working version {working-versions} (in this repo)
+* Latest *released* versions were {released-versions} - they died with jFrog
+* Latest working versions are {working-versions} (in this repo) using Apache Shiro 1.13.0
+* Next version will be {next-version} using Apache Shiro 2.0.1 compatible with Grails 5 and Java 11+
+and will be released in maven.
 
-This is the Grails Shiro plugin for grails version 4.0.x and Shiro 1.5.3. This was derived from the Grails 2.x version
+This is the Grails Shiro plugin for *Grails version 4.0.x and Shiro 1.13.0*.
+
+This project was derived from the Grails 2.x version
 (https://github.com/pledbrook/grails-shiro).
 
-We pretty much re-wrote the plugin for Grails 3 and to simplify the use, improve the documentation and make it easier to
-maintain. There are lots of changes please check out the
+We pretty much re-wrote the plugin for Grails 3 & 4 and to simplify the use, improve the documentation
+and make it easier to maintain. There are lots of changes please check out the
 https://github.com/nerdErg/grails-shiro/blob/master/docs/Guide.adoc[Guide] in the docs directory.
 
 === Numbering

@@ -13,7 +13,7 @@ buildscript {
     }
 }
 
-version "4.5.8"
+version "4.5.9"
 group "com.nerderg.plugins"
 
 apply plugin: "eclipse"

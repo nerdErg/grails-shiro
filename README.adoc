@@ -86,6 +86,42 @@ https://github.com/nerdErg/grails-shiro/blob/master/docs/Guide.adoc#permission-s
 
 == Version change log
 
+=== version 5.0.0
+
+* upgrade to Grails 5.3.6
+* Upgrade to Shiro 2.0.1
+* upgrade Gradle
+
+WARNING: you now need to include apache shiro in your build.gradle due to the newer versions of Gradle not pulling in
+transitive deps. Quick Fix below.
+
+[source,groovy]
+.build.gradle
+----
+dependencies {
+ ...
+// add this to dependencies to get shiro depenedencies
+    ['ehcache', 'core', 'spring', 'web'].each { pkg ->
+        implementation("org.apache.shiro:shiro-$pkg:$shiroVersion") {
+            exclude module: 'ejb'
+            exclude module: 'jsf-api'
+            exclude module: 'servlet-api'
+            exclude module: 'jsp-api'
+            exclude module: 'jstl'
+            exclude module: 'jms'
+            exclude module: 'connector-api'
+            exclude module: 'ehcache-core'
+            exclude module: 'slf4j-api'
+            exclude module: 'commons-logging'
+        }
+    }
+}
+----
+
+=== version 4.5.8
+
+* Upgrade to shiro version 1.13.0
+
 === version 4.4
 
 * Upgrade shiro to version 1.7.1 fixing CVE-2020-17523

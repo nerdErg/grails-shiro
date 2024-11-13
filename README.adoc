@@ -11,20 +11,18 @@
 :toclevels: 2
 :toc-class: toc2
 :release: 4
-:working-versions: 3.4, 4.5.9
+:working-versions: 5.0.0, Apache Shiro 2.0.1
 :released-versions: 3.4, 4.4
-:next-version: 5.0.0
 
 image:https://travis-ci.org/nerdErg/grails-shiro.svg?branch=master["Build Status", link="https://travis-ci.org/nerdErg/grails-shiro"]
 
 == Versions
 
 * Latest *released* versions were {released-versions} - they died with jFrog
-* Latest working versions are {working-versions} (in this repo) using Apache Shiro 1.13.0
-* Next version will be {next-version} using Apache Shiro 2.0.1 compatible with Grails 5 and Java 11+
-and will be released in maven.
+* Latest working versions are {working-versions} (in this repo) compatible with Grails 5 and Java 11+
+* Next release in maven.
 
-This is the Grails Shiro plugin for *Grails version 4.0.x and Shiro 1.13.0*.
+This is the Grails Shiro plugin for *Grails version 5+ and Shiro 2.0.1*.
 
 This project was derived from the Grails 2.x version
 (https://github.com/pledbrook/grails-shiro).
@@ -135,6 +133,7 @@ If you have the credentials to publish the plugin just run the `gradle bintrayUp
 * https://github.com/pledbrook/grails-shiro/commits?author=yellowsnow[yellowsnow]
 * https://github.com/pledbrook/grails-shiro/commits?author=apandichi[apandichi]
 * https://github.com/animator013[animator013 - Peter Legen]
+* https://https://github.com/chrisbitmead[Chris Bitmead] - Grails 5 and AD changes
 * and https://github.com/pledbrook/grails-shiro/graphs/contributors[others] for work on the previous version of the plugin.
 
 Thank you to everyone who provides feedback!

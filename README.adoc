@@ -58,7 +58,23 @@ To install, add this to your `build.gradle` dependencies for Grails 5:
 
 [subs="attributes"]
 ----
-compile "org.nerderg.plugins:grails-shiro:{release}"
+implementation "org.nerderg.plugins:grails-shiro:{release}"
+
+//include the shiro dependency, required in Gradle 5+
+['ehcache', 'core', 'spring', 'web'].each { pkg ->
+        implementation("org.apache.shiro:shiro-$pkg:2.0.1") {
+            exclude module: 'ejb'
+            exclude module: 'jsf-api'
+            exclude module: 'servlet-api'
+            exclude module: 'jsp-api'
+            exclude module: 'jstl'
+            exclude module: 'jms'
+            exclude module: 'connector-api'
+            exclude module: 'ehcache-core'
+            exclude module: 'slf4j-api'
+            exclude module: 'commons-logging'
+        }
+    }
 ----
 and this for Grails 4:
 
@@ -75,13 +91,7 @@ compile "org.grails.plugins:grails-shiro:3.4"
 ----
 == Getting started
 
-If you're implementing your security from scratch, then you can install grails-shiro by adding
-
-[subs="attributes"]
-----
-compile "org.nerderg.plugins:grails-shiro:{release}"
-----
-to your build.gradle dependencies and typing
+If you're implementing your security from scratch, then you can install grails-shiro as above and typing
 
  grails shiro-quick-start
 

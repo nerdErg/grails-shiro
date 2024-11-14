@@ -2,23 +2,28 @@ buildscript {
     ext {
         grailsVersion = project.grailsVersion
         shiroVersion = project.shiroVersion
+        isReleaseVersion = !version.endsWith("SNAPSHOT")
     }
     repositories {
         mavenLocal()
         maven { url "https://repo.grails.org/grails/core" }
+        maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
         classpath "org.grails:grails-gradle-plugin:$grailsGradlePluginVersion"
         classpath "org.asciidoctor:asciidoctor-gradle-plugin:1.6.1"
+        classpath "io.github.gradle-nexus:publish-plugin:1.0.0"
     }
 }
 
 version "5.0.0"
-group "com.nerderg.plugins"
+group "org.nerderg.plugins"
 
 apply plugin: "eclipse"
 apply plugin: "idea"
+apply plugin: "signing"
 apply plugin: "maven-publish"
+apply plugin: "io.github.gradle-nexus.publish-plugin"
 apply plugin: "org.grails.grails-plugin"
 apply plugin: "org.grails.grails-gsp"
 apply plugin: 'org.asciidoctor.convert'
@@ -77,6 +82,15 @@ bootRun {
 // enable if you wish to package this plugin as a standalone application
 bootJar.enabled = false
 
+afterEvaluate {
+    signing {
+        required { isReleaseVersion && gradle.taskGraph.hasTask("publish") }
+        sign publishing.publications.maven
+    }
+}
+tasks.withType(Sign) {
+    onlyIf { isReleaseVersion }
+}
 publishing {
     publications {
         maven(MavenPublication) {
@@ -106,7 +120,8 @@ publishing {
                 }
                 scm {
                     connection = 'scm:git:git://github.com/nerdErg/grails-shiro'
-                    developerConnection = ''
+                    developerConnection = 'scm:git:git://github.com/nerdErg/grails-shiro'
+                    url = 'https://github.com/nerdErg/grails-shiro'
                 }
             }
 
@@ -114,6 +129,20 @@ publishing {
     }
 }
 
+nexusPublishing {
+    repositories {
+        sonatype {
+            def ossUser = System.getenv("SONATYPE_USERNAME") ?: project.hasProperty("sonatypeOssUsername") ? project.sonatypeOssUsername : ''
+            def ossPass = System.getenv("SONATYPE_PASSWORD") ?: project.hasProperty("sonatypeOssPassword") ? project.sonatypeOssPassword : ''
+            def ossStagingProfileId = System.getenv("SONATYPE_STAGING_PROFILE_ID") ?: project.hasProperty("sonatypeOssStagingProfileId") ? project.sonatypeOssStagingProfileId : ''
+            nexusUrl = uri("https://s01.oss.sonatype.org/service/local/")
+            snapshotRepositoryUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+            username = ossUser
+            password = ossPass
+            stagingProfileId = ossStagingProfileId
+        }
+    }
+}
 
 task shiroTest(type: Test) {
     dependsOn "publishToMavenLocal"

@@ -10,19 +10,18 @@
 :toc: left
 :toclevels: 2
 :toc-class: toc2
-:release: 4
+:release: 5.0.0
 :working-versions: 5.0.0, Apache Shiro 2.0.1
-:released-versions: 3.4, 4.4
+:released-versions: 5.0.0, Apache Shiro 2.0.1
 
 image:https://travis-ci.org/nerdErg/grails-shiro.svg?branch=master["Build Status", link="https://travis-ci.org/nerdErg/grails-shiro"]
 
 == Versions
 
-* Latest *released* versions were {released-versions} - they died with jFrog
-* Latest working versions are {working-versions} (in this repo) compatible with Grails 5 and Java 11+
-* Next release in maven.
-
-This is the Grails Shiro plugin for *Grails version 5+ and Shiro 2.0.1*.
+* 5.0.0 This is the Grails Shiro plugin for *Grails version 5+ and Shiro 2.0.1*.
+* Older released versions 3.4 and 4.4.
+* Version 4.5.9 supports Grails 4 with shiro 1.13.0 not released on maven, you can download the branch and
+use the ./gradlew publishToMavenLocal to install it manually
 
 This project was derived from the Grails 2.x version
 (https://github.com/pledbrook/grails-shiro).
@@ -37,52 +36,67 @@ In general the version number is following the Grails major version it supports,
 
 [subs="attributes"]
 ----
-3.{release} = Grails 3 plugin release {release}
-4.{release} = Grails 4 plugin release {release}
+5.0.0 = Grails 5 plugin release 0
+3.4 = Grails 3 plugin release 4
+4.5.9 = Grails 4 plugin release 5.9
 ----
 
 === Maintenance
-Although we have now published the Grails 4 version of this plugin we will continue to maintain the Grails 3 version
-backporting features till July 2020 where possible.
+
+We are working on a Grails 6 plugin.
+
+The Grails 5 plugin will be maintained to match shiro releases where possible and bugs fixed.
+We will add some extra AD LDAP support too.
 
 === Documentation and Source
 
-In general the documentation applies to both Grails 3 and 4 versions of the plugin. Source code including specific documentation
-for the Grails 3 version can be found in the *Grails-3 Branch*.
+In general the documentation applies to all versions of the plugin. Source code including specific documentation for older Grails versions can be found in the *Branches*.
 
 == Installation
 
-To install, add this to your `build.gradle` dependencies for Grails 4:
+To install, add this to your `build.gradle` dependencies for Grails 5:
 
 [subs="attributes"]
 ----
-compile "org.grails.plugins:grails-shiro:4.{release}"
+compile "org.nerderg.plugins:grails-shiro:{release}"
 ----
+and this for Grails 4:
+
+[subs="attributes"]
+----
+compile "org.grails.plugins:grails-shiro:4.4"
+----
+
 and this for Grails 3:
 
 [subs="attributes"]
 ----
-compile "org.grails.plugins:grails-shiro:3.{release}"
+compile "org.grails.plugins:grails-shiro:3.4"
 ----
 == Getting started
 
-If you're implementing your security from scratch, then you can simply install grails-shiro by adding
+If you're implementing your security from scratch, then you can install grails-shiro by adding
 
 [subs="attributes"]
 ----
-compile "org.grails.plugins:grails-shiro:4.{release}"
+compile "org.nerderg.plugins:grails-shiro:{release}"
 ----
 to your build.gradle dependencies and typing
-shiro quick start, https://github.com/nerdErg/grails-shiro/blob/master/docs/Guide.adoc#shiro-quick-start['grails shiro-quick-start'].
 
-This will create a ShiroWildcardDbRealm in your `grails-app/realms` directory and make a ShiroUser and ShiroRole domain
-class. It will also create an AuthController to let you log in. Check out
-https://github.com/nerdErg/grails-shiro/blob/master/docs/Guide.adoc#wildcard-db-realm[Wildcard DB Realm] for how you might populate
-a couple of users using Boostrap.groovy.
+ grails shiro-quick-start
 
-Now to Control access to a Controller add an Interceptor for that controller using
-`https://github.com/nerdErg/grails-shiro/blob/master/docs/Guide.adoc#create-shiro-controller-interceptor[grails create-shiro-controller-interceptor] MyController` which will add
-https://github.com/nerdErg/grails-shiro/blob/master/docs/Guide.adoc#permission-string-conventions[access control by convention].
+See: https://github.com/nerdErg/grails-shiro/blob/master/docs/Guide.adoc#shiro-quick-start[grails shiro-quick-start].
+
+This will create a ShiroWildcardDbRealm in your `grails-app/realms` directory and make a ShiroUser and
+ShiroRole domain class. It will also create an AuthController to let you log in.
+Check out https://github.com/nerdErg/grails-shiro/blob/master/docs/Guide.adoc#wildcard-db-realm[Wildcard DB Realm] for how you might populate a couple of users using Boostrap.groovy.
+
+Now, to Control access to a Controller add an Interceptor for that controller using
+
+ grails create-shiro-controller-interceptor MyController
+
+See: https://github.com/nerdErg/grails-shiro/blob/master/docs/Guide.adoc#create-shiro-controller-interceptor[ create-shiro-controller-interceptor]
+which will add https://github.com/nerdErg/grails-shiro/blob/master/docs/Guide.adoc#permission-string-conventions[access control by convention].
 
 == Version change log
 
@@ -161,7 +175,13 @@ To build the plugin yourself and install it from this repo:
 
 == Publishing
 
-If you have the credentials to publish the plugin just run the `gradle bintrayUpload` task.
+Refer to https://grails.org/blog/2021-04-07-publish-grails-plugin-to-maven-central.html
+
+If you have the signing and repository credentials, you can run:
+
+ ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository
+
+But you *should* publish to staging and check everything first.
 
 == Kudos
 

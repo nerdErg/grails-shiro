@@ -136,7 +136,7 @@ task shiroTest(type: Test) {
                 .replaceFirst('\ndependencies \\{', """dependencies {
     implementation "com.nerderg.plugins:grails-shiro:${version}" 
     testImplementation "net.sourceforge.htmlunit:htmlunit:2.70.0"
-    testRuntimeOnly 'org.seleniumhq.selenium:htmlunit3-driver:4.26.0'
+    testRuntimeOnly 'org.seleniumhq.selenium:htmlunit3-driver:4.48.0'
     ['ehcache', 'core', 'spring', 'web'].each { pkg ->
         implementation("org.apache.shiro:shiro-" + pkg + ":${shiroVersion}") {
             exclude module: 'ejb'
@@ -156,7 +156,7 @@ task shiroTest(type: Test) {
 mavenLocal()''')
                 .replaceAll(/chromedriver \{\n *version = '[^']*'/, '''chromedriver {
             version = '130.0.6723.59\'''')
-                .replace('classpath "gradle.plugin.com.github.erdi.webdriver-binaries:webdriver-binaries-gradle-plugin:2.6"',
+                .replace('classpath "gradle.plugin.com.github.erdi.webdriver-binaries:webdriver-binaries-gradle-plugin:2.7"',
                         'classpath "com.github.erdi:webdriver-binaries-gradle-plugin:3.2"')
         build.write(content)
         //add LDAP config
@@ -276,7 +276,7 @@ task shiroCliTest(type: Test) {
 mavenLocal()''')
                 .replaceAll(/chromedriver \{\n *version = '[^']*'/, '''chromedriver {
             version = '130.0.6723.59\'''')
-                .replace('classpath "gradle.plugin.com.github.erdi.webdriver-binaries:webdriver-binaries-gradle-plugin:2.6"', 'classpath "com.github.erdi:webdriver-binaries-gradle-plugin:3.2"')
+                .replace('classpath "gradle.plugin.com.github.erdi.webdriver-binaries:webdriver-binaries-gradle-plugin:2.7"', 'classpath "com.github.erdi:webdriver-binaries-gradle-plugin:3.2"')
         build.write(content)
 
         File settings = new File("$projectDir/src/test/app/cli-tester/settings.gradle")
